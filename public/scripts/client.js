@@ -3,15 +3,15 @@
 console.log('hello world')
 
 if ('Notification' in window) {
-  if (Notification.permission === 'granted') {
+  if (window.Notification.permission === 'granted') {
     // If it's okay let's create a notification
     doNotify()
   } else {
     // notification == denied
-    Notification.requestPermission()
+    window.Notification.requestPermission()
       .then(function (result) {
         console.log(result) // granted || denied
-        if (Notification.permission === 'granted') {
+        if (window.Notification.permission === 'granted') {
           doNotify()
         }
       })
@@ -32,7 +32,7 @@ function doNotify () {
     timestamp: t,
     vibrate: [100, 200, 100]
   }
-  const n = new Notification(title, options)
+  const n = new window.Notification(title, options)
   n.addEventListener('show', function (ev) {
     console.log('SHOW', ev.currentTarget.data)
   })
