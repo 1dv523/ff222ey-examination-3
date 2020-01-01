@@ -3,7 +3,7 @@
 console.log('hello world')
 
 // const socket = window.io.connect('http://localhost:4567')
-const socket = window.io.connect('http://cscloud702.lnu.se.')
+const socket = window.io.connect('https://cscloud702.lnu.se.')
 socket.on('message', function (data) {
   console.log('message arrivede')
   console.log(data)
