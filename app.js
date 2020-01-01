@@ -2,6 +2,7 @@
 const express = require('express')
 const hbs = require('express-hbs')
 const path = require('path')
+const http = require('http')
 const session = require('express-session')
 const port = process.env.PORT || 4567
 const helmet = require('helmet')
@@ -13,7 +14,7 @@ const socket = require('socket.io')
 const dotenv = require('dotenv')
 
 const app = express()
-const server = app.listen(port, () => console.log('Server running at http://localhost:' + port))
+const server = http.createServer(app)
 
 dotenv.config({
   path: './.env'
@@ -80,3 +81,5 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500)
   res.sendFile(path.join(__dirname, 'public', '500.html'))
 })
+
+server.listen(port, () => console.log('Server running at http://localhost:' + port))
