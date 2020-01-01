@@ -2,6 +2,17 @@
 
 console.log('hello world')
 
+// const socket = window.io.connect('http://localhost:4567')
+const socket = window.io.connect('http://cscloud702.lnu.se.')
+socket.on('message', function (data) {
+  console.log('message arrivede')
+  console.log(data)
+  // const p = document.getElementsByTagName('p')[0]
+  // console.log(p)
+  // p.textContent = data.message
+})
+
+/*
 if ('Notification' in window) {
   if (window.Notification.permission === 'granted') {
     // If it's okay let's create a notification
@@ -41,3 +52,4 @@ function doNotify () {
   })
   setTimeout(n.close.bind(n), 3000) // close notification after 3 seconds
 }
+*/

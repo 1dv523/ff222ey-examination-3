@@ -3,22 +3,65 @@ const express = require('express')
 const hbs = require('express-hbs')
 const path = require('path')
 const session = require('express-session')
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 4567
 const helmet = require('helmet')
 const cookieParser = require('cookie-parser')
+const bodyParser = require('body-parser')
+const GithubWebHook = require('express-github-webhook')
+const webhookHandler = GithubWebHook({ path: '/hooks', secret: process.env.GITHUB_TOKEN })
+const socket = require('socket.io')
+const dotenv = require('dotenv')
 
 const app = express()
+const server = app.listen(port, () => console.log('Server running at http://localhost:' + port))
+
+dotenv.config({
+  path: './.env'
+})
+
+const io = socket(server)
+
+io.on('connection', function (socket) {
+  console.log('Connected')
+  // const data = {}
+  // data.message = 'lol'
+  // socket.emit('message', data)
+
+  webhookHandler.on('issue_comment', function (repo, data) {
+    console.log('comment')
+    socket.emit('message', data)
+  })
+
+  webhookHandler.on('issues', function (repo, data) {
+    console.log('issues')
+    socket.emit('message', data)
+  })
+
+  webhookHandler.on('error', function (err, req, res) {
+    if (err) {
+      throw err
+    }
+  })
+})
 
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: false }))
+
+app.use('/', require('./routes/homeRouter.js'))
+
+app.use(bodyParser.urlencoded({ extended: false }))
+// parse application/json
+app.use(bodyParser.json())
+
+app.use(webhookHandler) // use our middleware
+
+// Now could handle following events
 
 app.engine('hbs', hbs.express4({
   defaultLayout: path.join(__dirname, 'views', 'layouts', 'default'),
   partialsDir: path.join(__dirname, 'views', 'partials')
 }))
 app.set('view engine', 'hbs')
-
-app.use('/', require('./routes/homeRouter.js'))
 
 app.use((req, res, next) => {
   const err = {}
@@ -37,5 +80,3 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500)
   res.sendFile(path.join(__dirname, 'public', '500.html'))
 })
-
-app.listen(port, () => console.log('Server running at http://localhost:' + port))
