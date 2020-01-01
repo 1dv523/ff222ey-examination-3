@@ -24,25 +24,25 @@ const io = socket(server)
 
 io.on('connection', function (socket) {
   console.log('Connected')
-  const data = {}
-  data.message = 'lol'
-  socket.emit('message', data)
+  // const data = {}
+  // data.message = 'lol'
+  // socket.emit('message', data)
 
-  // webhookHandler.on('issue_comment', function (repo, data) {
-  //   console.log('comment')
-  //   socket.emit('message', data)
-  // })
+  webhookHandler.on('issue_comment', function (repo, data) {
+    console.log('comment')
+    socket.emit('message', data)
+  })
 
-  // webhookHandler.on('issues', function (repo, data) {
-  //   console.log('issues')
-  //   socket.emit('message', data)
-  // })
+  webhookHandler.on('issues', function (repo, data) {
+    console.log('issues')
+    socket.emit('message', data)
+  })
 
-  // webhookHandler.on('error', function (err, req, res) {
-  //   if (err) {
-  //     throw err
-  //   }
-  // })
+  webhookHandler.on('error', function (err, req, res) {
+    if (err) {
+      throw err
+    }
+  })
 })
 
 app.use(express.static(path.join(__dirname, 'public')))
