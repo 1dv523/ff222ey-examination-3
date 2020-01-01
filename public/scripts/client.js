@@ -2,10 +2,8 @@
 
 console.log('hello world')
 
-<script src="https://cdn.socket.io/socket.io-1.0.0.js"></script>
-
-// const socket = window.io.connect('http://localhost:4567')
-const socket = window.io.connect('https://cscloud702.lnu.se.')
+const socket = window.io.connect('http://localhost:4567')
+// const socket = window.io.connect('https://cscloud702.lnu.se.')
 
 socket.on('message', function (data) {
   console.log('message arrivede')
