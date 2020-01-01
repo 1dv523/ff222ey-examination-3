@@ -1,6 +1,6 @@
 'use strict'
 
-console.log('hello world')
+console.log('hello worldss')
 
 const socket = window.io.connect('http://localhost:4567')
 // const socket = io.connect('http://cscloud702.lnu.se.')
