@@ -2,6 +2,10 @@
 
 console.log('hello worldss')
 
+var socket = io() // your initialization code here.
+console.log('i am here lol')
+socket.connect('http://localhost:4567')
+
 // const socket = window.io.connect('http://localhost:4567')
 // const socket = io.connect('http://cscloud702.lnu.se.')
 // socket.on('message', function (data) {
