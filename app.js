@@ -23,9 +23,9 @@ const io = socket(server)
 
 io.on('connection', function (socket) {
   console.log('Connected')
-  // const data = {}
-  // data.message = 'lol'
-  // socket.emit('message', data)
+  const data = {}
+  data.message = 'lol'
+  socket.emit('message', data)
 
   webhookHandler.on('issue_comment', function (repo, data) {
     console.log('comment')
