@@ -3,5 +3,11 @@
 <script>
      var socket = io(); // your initialization code here.
      console.log('i am here lol')
-     socket.connect('http://localhost:4567')
+     socket.connect('http://cscloud702.lnu.se')
+
+      socket.on('message', function (data) {
+    console.log('message arrivede')
+    console.log(data)
+  // p.textContent = data.message
+ })
 </script>
