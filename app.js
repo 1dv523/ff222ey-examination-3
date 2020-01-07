@@ -24,25 +24,26 @@ const io = socket(server)
 
 io.on('connection', function (socket) {
   console.log('Connected')
+  app.set('socket', socket)
   // const data = {}
   // data.message = 'lol'
   // socket.emit('message', data)
 
-  webhookHandler.on('issue_comment', function (repo, data) {
-    console.log('comment')
-    socket.emit('message', data)
-  })
+  // webhookHandler.on('issue_comment', function (repo, data) {
+  //   console.log('comment')
+  //   socket.emit('message', data)
+  // })
 
-  webhookHandler.on('issues', function (repo, data) {
-    console.log('issues')
-    socket.emit('message', data)
-  })
+  // webhookHandler.on('issues', function (repo, data) {
+  //   console.log('issues')
+  //   socket.emit('message', data)
+  // })
 
-  webhookHandler.on('error', function (err, req, res) {
-    if (err) {
-      throw err
-    }
-  })
+  // webhookHandler.on('error', function (err, req, res) {
+  //   if (err) {
+  //     throw err
+  //   }
+  // })
 })
 
 app.use(express.static(path.join(__dirname, 'public')))
@@ -55,6 +56,24 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.use(webhookHandler) // use our middleware
+
+webhookHandler.on('issue_comment', function (repo, data) {
+  console.log('comment')
+  const socket = app.get('socket')
+  socket.emit('message', data)
+})
+
+webhookHandler.on('issues', function (repo, data) {
+  console.log('issues')
+  const socket = app.get('socket')
+  socket.emit('message', data)
+})
+
+webhookHandler.on('error', function (err, req, res) {
+  if (err) {
+    throw err
+  }
+})
 
 // Now could handle following events
 

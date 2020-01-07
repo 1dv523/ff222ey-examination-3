@@ -25,6 +25,9 @@
     "express-hbs": "^2.2.0",
     "express-session": "^1.17.0",
     "helmet": "^3.21.2",
+    "moment": "^2.24.0",
+    "node-fetch": "^2.6.0",
+    "octonode": "^0.9.5",
     "socket.io": "^2.3.0"
   },
   "devDependencies": {

@@ -1,13 +1,37 @@
 <p>Hello World</p>
+<a href="https://github.com/login/oauth/authorize?client_id=585e50100463423888df">login here</a>
 
-<script>
+<style>
+  .inline {
+    display: inline-block;
+    margin-bottom: 0.3em;
+  }
+</style>
+
+{{#if repos }}
+  <h5>Repos</h5>
+{{/if}}
+{{#each repos }}
+<div class="inline">
+<div class="card w-80">
+  <div class="card-body">
+    <h5 class="card-title">{{this.url}}</h5>
+    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+    <a href="/repo/{{this.url}}" class="btn btn-primary">View Repo</a>
+  </div>
+</div>
+</div>
+{{/each}}
+
+
+{{!-- <script>
      var socket = io(); // your initialization code here.
      console.log('i am here lol')
-     socket.connect('http://cscloud702.lnu.se')
+     socket.connect('http://localhost:4567')
 
       socket.on('message', function (data) {
     console.log('message arrivede')
     console.log(data)
   // p.textContent = data.message
  })
-</script>
+</script> --}}

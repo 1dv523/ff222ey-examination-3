@@ -2,19 +2,29 @@
 
 console.log('hello worldss')
 
-var socket = io () // your initialization code here.
-console.log('i am here lol')
-socket.connect('http://localhost:4567')
+const socket = window.io.connect('http://localhost:4567')
+const button = document.querySelector('#login')
 
-// const socket = window.io.connect('http://localhost:4567')
+button.addEventListener('click', function (event) {
+  console.log('pressed lol')
+  const url = 'https://github.com/login/oauth/authorize'
+  window.fetch(url, {
+    method: 'post',
+    headers: {
+      client_id: '585e50100463423888df',
+      scope: 'repo'
+    },
+    body: 'foo=bar&lorem=ipsum'
+  })
+})
 // const socket = io.connect('http://cscloud702.lnu.se.')
-// socket.on('message', function (data) {
-//   console.log('message arrivede')
-//   console.log(data)
-//   // const p = document.getElementsByTagName('p')[0]
+socket.on('message', function (data) {
+  console.log('message arrived')
+  console.log(data)
+  // const p = document.getElementsByTagName('p')[0]
   // console.log(p)
   // p.textContent = data.message
-// })
+})
 
 /*
 if ('Notification' in window) {
