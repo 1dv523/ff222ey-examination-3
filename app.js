@@ -55,7 +55,8 @@ app.use(express.urlencoded({ extended: false }))
 
 app.get('/error', (req, res) => {
   console.log('lol')
-  process.exit(1)
+  res.send('The node envirment is ' + process.env.NODE_ENV)
+  // process.exit(1)
 })
 
 app.use('/', require('./routes/homeRouter.js'))
