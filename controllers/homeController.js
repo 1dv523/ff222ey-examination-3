@@ -16,19 +16,22 @@ homeController.hooks = (req, res, next) => {
 }
 
 homeController.callback = async (req, res, next) => {
-  const code = req.query.code
-  const body = {
-    client_id: process.env.client_id,
-    client_secret: process.env.client_secret,
-    code: code
-  }
-  let response = await fetch('https://github.com/login/oauth/access_token', {
-    method: 'post',
-    body: JSON.stringify(body),
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
-  })
-  response = await response.json()
+  // const code = req.query.code
+  // const body = {
+  //   client_id: process.env.client_id,
+  //   client_secret: process.env.client_secret,
+  //   code: code
+  // }
+  // let response = await fetch('https://github.com/login/oauth/access_token', {
+  //   method: 'post',
+  //   body: JSON.stringify(body),
+  //   headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
+  // })
+  // response = await response.json()
   res.send('lol')
+
+
+
 
   // response = await response.json()
   // const token = response.access_token
@@ -38,6 +41,9 @@ homeController.callback = async (req, res, next) => {
   // console.log(token)
   // response = await response.json()
   // console.log(response)
+
+
+
 /*
   const token = response.access_token
   client = github.client(token)
