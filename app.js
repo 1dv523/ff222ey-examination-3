@@ -49,6 +49,11 @@ io.on('connection', function (socket) {
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: false }))
 
+app.get('/error', (req, res) => {
+  console.log('lol')
+  process.exit(1)
+})
+
 app.use('/', require('./routes/homeRouter.js'))
 
 app.use(bodyParser.urlencoded({ extended: false }))
