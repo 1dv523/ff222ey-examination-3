@@ -16,9 +16,13 @@ const dotenv = require('dotenv')
 const app = express()
 const server = http.createServer(app)
 
-dotenv.config({
-  path: './.env'
-})
+const production = process.env.NODE_ENV
+
+if (!production) {
+  dotenv.config({
+    path: './.env'
+  })
+}
 
 const io = socket(server)
 
