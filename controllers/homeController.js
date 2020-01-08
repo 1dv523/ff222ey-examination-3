@@ -28,6 +28,7 @@ homeController.callback = async (req, res, next) => {
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
   })
   response = await response.json()
+  res.send('lol')
 
   // response = await response.json()
   // const token = response.access_token
@@ -37,7 +38,7 @@ homeController.callback = async (req, res, next) => {
   // console.log(token)
   // response = await response.json()
   // console.log(response)
-
+/*
   const token = response.access_token
   client = github.client(token)
   const ghme = client.me()
@@ -54,6 +55,7 @@ homeController.callback = async (req, res, next) => {
     // console.log(repos)
     res.render('home/home', { repos })
   })
+  */
 }
 
 homeController.repo = async (req, res, next) => {
