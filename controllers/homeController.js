@@ -22,7 +22,7 @@ homeController.callback = async (req, res, next) => {
     client_secret: process.env.client_secret,
     code: code
   }
-  res.send(body.client_id)
+  res.send(body.code)
 
   // let response = await fetch('https://github.com/login/oauth/access_token', {
   //   method: 'post',
