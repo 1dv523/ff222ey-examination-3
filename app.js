@@ -53,7 +53,7 @@ app.use(express.urlencoded({ extended: false }))
 
 app.get('/error', (req, res) => {
   console.log('lol')
-  res.send('The node envirment is ' + process.env.NODE_ENV)
+  res.send('The node envirment is ' + process.env.client_id)
   // process.exit(1)
 })
 

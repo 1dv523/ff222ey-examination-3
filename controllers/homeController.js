@@ -22,14 +22,12 @@ homeController.callback = async (req, res, next) => {
     client_secret: process.env.client_secret,
     code: code
   }
-  res.send(body.client_secret)
-
-  // let response = await fetch('https://github.com/login/oauth/access_token', {
-  //   method: 'post',
-  //   body: JSON.stringify(body),
-  //   headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
-  // })
-  // response = await response.json()
+  let response = await fetch('https://github.com/login/oauth/access_token', {
+    method: 'post',
+    body: JSON.stringify(body),
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
+  })
+  response = await response.json()
 
   // response = await response.json()
   // const token = response.access_token
@@ -41,22 +39,21 @@ homeController.callback = async (req, res, next) => {
   // console.log(response)
 
   const token = response.access_token
-  // res.send(token)
-  // client = github.client(token)
-  // const ghme = client.me()
-  // const repos = []
-  // ghme.repos(function (err, body, status) {
-  //   if (err) {
-  //     console.log(err)
-  //   }
+  client = github.client(token)
+  const ghme = client.me()
+  const repos = []
+  ghme.repos(function (err, body, status) {
+    if (err) {
+      console.log(err)
+    }
 
-  //   body.forEach(element => {
-  //     repos.push({ name: element.name, url: element.full_name })
-  //     // console.log(element)
-  //   })
-  //   // console.log(repos)
-  //   res.render('home/home', { repos })
-  // })
+    body.forEach(element => {
+      repos.push({ name: element.name, url: element.full_name })
+      // console.log(element)
+    })
+    // console.log(repos)
+    res.render('home/home', { repos })
+  })
 }
 
 homeController.repo = async (req, res, next) => {
