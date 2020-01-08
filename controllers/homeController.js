@@ -28,10 +28,6 @@ homeController.callback = async (req, res, next) => {
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
   })
   response = await response.json()
-  res.send('lol')
-
-
-  
 
   // response = await response.json()
   // const token = response.access_token
@@ -42,26 +38,23 @@ homeController.callback = async (req, res, next) => {
   // response = await response.json()
   // console.log(response)
 
-
-
-/*
   const token = response.access_token
-  client = github.client(token)
-  const ghme = client.me()
-  const repos = []
-  ghme.repos(function (err, body, status) {
-    if (err) {
-      console.log(err)
-    }
+  res.send(token)
+  // client = github.client(token)
+  // const ghme = client.me()
+  // const repos = []
+  // ghme.repos(function (err, body, status) {
+  //   if (err) {
+  //     console.log(err)
+  //   }
 
-    body.forEach(element => {
-      repos.push({ name: element.name, url: element.full_name })
-      // console.log(element)
-    })
-    // console.log(repos)
-    res.render('home/home', { repos })
-  })
-  */
+  //   body.forEach(element => {
+  //     repos.push({ name: element.name, url: element.full_name })
+  //     // console.log(element)
+  //   })
+  //   // console.log(repos)
+  //   res.render('home/home', { repos })
+  // })
 }
 
 homeController.repo = async (req, res, next) => {
