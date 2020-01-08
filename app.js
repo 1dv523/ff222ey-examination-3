@@ -11,18 +11,16 @@ const bodyParser = require('body-parser')
 const GithubWebHook = require('express-github-webhook')
 const webhookHandler = GithubWebHook({ path: '/hooks', secret: process.env.GITHUB_TOKEN })
 const socket = require('socket.io')
-// const dotenv = require('dotenv')
+const dotenv = require('dotenv')
 
 const app = express()
 const server = http.createServer(app)
 
 const production = process.env.NODE_ENV
 
-// if (!production) {
-//   dotenv.config({
-//     path: './.env'
-//   })
-// }
+dotenv.config({
+  path: './.env'
+})
 
 const io = socket(server)
 
@@ -55,7 +53,7 @@ app.use(express.urlencoded({ extended: false }))
 
 app.get('/error', (req, res) => {
   console.log('lol')
-  res.send('The node envirment is ' + process.env.GITHUB_TOKEN)
+  res.send('The node envirment is ' + process.env.NODE_ENV)
   // process.exit(1)
 })
 
