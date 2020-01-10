@@ -12,40 +12,44 @@ const GithubWebHook = require('express-github-webhook')
 const webhookHandler = GithubWebHook({ path: '/hooks', secret: process.env.GITHUB_TOKEN })
 const socket = require('socket.io')
 const dotenv = require('dotenv')
+const mongoose = require('./config/mongoose.js')
+const passport = require('passport')
 
 const app = express()
 const server = http.createServer(app)
 
-const production = process.env.NODE_ENV
-
 dotenv.config({
   path: './.env'
 })
+
+mongoose.connect().catch(error => {
+  console.log(error)
+  process.exit(1)
+})
+
+require('./config/passport-setup')
+
+const sessionOptions = {
+  name: process.env.SESSION_NAME,
+  secret: process.env.SESSION_SECRET,
+  resave: false, // Resave even if a request is not changing the session.
+  saveUninitialized: false, // Don't save a created but not modified session.
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24, // % 1 day
+    sameSite: 'lax', // change to lax maybe
+    HttpOnly: true
+  }
+}
+
+app.use(session(sessionOptions))
+app.use(passport.initialize())
+app.use(passport.session())
 
 const io = socket(server)
 
 io.on('connection', function (socket) {
   console.log('Connected')
   app.set('socket', socket)
-  // const data = {}
-  // data.message = 'lol'
-  // socket.emit('message', data)
-
-  // webhookHandler.on('issue_comment', function (repo, data) {
-  //   console.log('comment')
-  //   socket.emit('message', data)
-  // })
-
-  // webhookHandler.on('issues', function (repo, data) {
-  //   console.log('issues')
-  //   socket.emit('message', data)
-  // })
-
-  // webhookHandler.on('error', function (err, req, res) {
-  //   if (err) {
-  //     throw err
-  //   }
-  // })
 })
 
 app.use(express.static(path.join(__dirname, 'public')))
@@ -58,6 +62,8 @@ app.get('/error', (req, res) => {
 })
 
 app.use('/', require('./routes/homeRouter.js'))
+app.use('/repos', require('./routes/repoRouter.js'))
+app.use('/auth', require('./routes/auth-routes.js'))
 
 app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json

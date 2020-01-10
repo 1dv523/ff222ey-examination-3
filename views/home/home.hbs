@@ -6,10 +6,14 @@
     display: inline-block;
     margin-bottom: 0.3em;
   }
+  .img {
+    width: 80px;
+  }
 </style>
 
 {{#if repos }}
   <h5>Repos</h5>
+  <img src="{{img}}" class="img" alt="an Image"/>
 {{/if}}
 {{#each repos }}
 <div class="inline">
@@ -17,7 +21,7 @@
   <div class="card-body">
     <h5 class="card-title">{{this.url}}</h5>
     <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-    <a href="/repo/{{this.url}}" class="btn btn-primary">View Repo</a>
+    <a href="/issues/{{this.url}}" class="btn btn-primary">View Repo</a>
   </div>
 </div>
 </div>

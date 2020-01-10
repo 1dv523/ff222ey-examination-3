@@ -3,9 +3,10 @@ const express = require('express')
 const router = express.Router()
 
 router.get('/', controller.index)
-router.get('/login/callback', controller.callback)
+router.get('/login/callback', controller.preCallback, controller.callback)
 router.post('/login', controller.login)
-router.get('/repo/:id/:id2', controller.repo)
+router.get('/issues/:id/:id2', controller.issues)
+router.get('/:id/repo', controller.repo)
 // router.post('/hooks', controller.hooks)
 
 module.exports = router
