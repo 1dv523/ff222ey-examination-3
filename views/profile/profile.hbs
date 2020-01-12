@@ -1,0 +1,18 @@
+{{#each info }}
+<div class="row">
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">{{this.name}}</h5>
+        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+        {{#if this.user }}
+         <p><span class="font-weight-bold">No of repos:</span> {{this.count}}</p>
+         <a href="/{{this.username}}/repo" class="btn btn-primary btn-sm">See all user repos</a>
+         {{else}}
+         <p><span class="font-weight-bold">No of Orgs:</span> {{this.count}}</p>
+         <a href="/{{this.username}}/repo/org" class="btn btn-primary btn-sm">See all Orgs</a>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+{{/each}}

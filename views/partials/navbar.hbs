@@ -3,7 +3,11 @@
     <a href="/" class="navbar-brand">Got an Issue?</a>
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
-       <form action="/auth/github" method="POST"><button class="btn btn-primary" type="submit">Log In</button></form>
+        {{#if loggedIn }}
+        <form action="/logout" method="POST"><button type="submit" class="btn btn-danger btn-sm">Log out </button></form>
+          {{else}}
+          <form action="/login" method="GET"><button type="submit" class="btn btn-danger btn-sm">Log in </button></form>
+        {{/if}}
       </li>
     </ul>
     <div class="dropdown">

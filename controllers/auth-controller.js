@@ -1,7 +1,8 @@
 const authController = {}
 
 authController.callback = async (req, res, next) => {
-  res.send('urboi')
+  const username = req.user.username
+  res.redirect(`/${username}/profile`)
 }
 
 module.exports = authController

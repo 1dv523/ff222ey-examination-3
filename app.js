@@ -61,8 +61,22 @@ app.get('/error', (req, res) => {
   // process.exit(1)
 })
 
+app.use((req, res, next) => {
+  if (req.user) {
+    res.locals.loggedIn = true
+    delete req.session.flash
+  }
+  if (req.session.userId) {
+    const lol = {}
+    lol.id = req.session.userId
+    res.locals.loggedIn = lol
+  }
+
+  next()
+})
+
 app.use('/', require('./routes/homeRouter.js'))
-app.use('/repos', require('./routes/repoRouter.js'))
+app.use('/:id', require('./routes/repoRouter.js'))
 app.use('/auth', require('./routes/auth-routes.js'))
 
 app.use(bodyParser.urlencoded({ extended: false }))
