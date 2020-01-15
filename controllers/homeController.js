@@ -38,7 +38,6 @@ homeController.hooks = (req, res, next) => {
 
 homeController.profile = async (req, res, next) => {
   const token = req.user.accessToken
-  console.log(token)
   client = github.client(token)
   const profile = {}
   const ghme = client.me()
@@ -54,6 +53,7 @@ homeController.profile = async (req, res, next) => {
         userRepos.push({ name: element.name, url: element.full_name, img: element.owner.avatar_url, user: element.owner.login })
       }
     })
+    console.log(body)
     profile.user = userRepos
   })
 
