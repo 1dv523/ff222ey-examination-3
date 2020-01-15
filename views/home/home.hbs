@@ -1,26 +1,32 @@
 <style>
   .inline {
     display: inline-block;
-    margin-bottom: 0.3em;
+    margin: 0.5em 0.5em 0.5em 0;
   }
-  .img {
+  .img2 {
     width: 240px;
     display: block;
     margin-bottom: 2em;
   }
 </style>
 
-{{#if repos }}
+{{#if org }}
+<h1>{{org}} Repos</h1>
+{{else}}
 <h1>User Repos</h1>
-  <img src="{{img}}" class="img" alt="an Image"/>
 {{/if}}
+<img src="{{img}}" class="img2" alt="an Image"/>
 {{#each repos }}
 <div class="inline">
 <div class="card w-100">
   <div class="card-body">
     <h5 class="card-title">{{this.name}}</h5>
     <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-    <a href="/issues/{{this.url}}" class="btn btn-primary btn-sm">View Issues</a>
+      {{#if ../org }}
+       <a href="/{{../navBar.username}}/repo/{{../org}}/issues/{{this.name}}" class="btn btn-primary btn-sm">View Issues</a>
+      {{else}}
+        <a href="/{{../navBar.username}}/repo/issues/{{this.name}}" class="btn btn-primary btn-sm">View Issues</a>
+      {{/if}}
   </div>
 </div>
 </div>

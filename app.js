@@ -12,7 +12,6 @@ const GithubWebHook = require('express-github-webhook')
 const webhookHandler = GithubWebHook({ path: '/hooks', secret: process.env.GITHUB_TOKEN })
 const socket = require('socket.io')
 const dotenv = require('dotenv')
-const mongoose = require('./config/mongoose.js')
 const passport = require('passport')
 
 const app = express()
@@ -20,11 +19,6 @@ const server = http.createServer(app)
 
 dotenv.config({
   path: './.env'
-})
-
-mongoose.connect().catch(error => {
-  console.log(error)
-  process.exit(1)
 })
 
 require('./config/passport-setup')
@@ -64,6 +58,7 @@ app.get('/error', (req, res) => {
 app.use((req, res, next) => {
   if (req.user) {
     res.locals.loggedIn = true
+    res.locals.navBar = req.user
     delete req.session.flash
   }
   if (req.session.userId) {

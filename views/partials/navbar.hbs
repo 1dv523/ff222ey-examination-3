@@ -1,12 +1,36 @@
   
+<style>
+  .img {
+    width: 35px;
+  }
+  .username {
+    font-size: 15px;
+    padding-left: 1em;
+    display: inline;
+  }
+  .margin {
+    margin: 0em;
+    margin-left: 0.8em;
+    padding: 0em;
+  }
+</style>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
     <a href="/" class="navbar-brand">Got an Issue?</a>
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
         {{#if loggedIn }}
-        <form action="/logout" method="POST"><button type="submit" class="btn btn-danger btn-sm">Log out </button></form>
-          {{else}}
-          <form action="/login" method="GET"><button type="submit" class="btn btn-danger btn-sm">Log in </button></form>
+          <li class="nav-item dropdown ">
+            <a class="nav-link text-light" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <div class="dropdown-toggle"><img src="{{navBar.avatar_url}}" class="img"><p class="username">{{navBar.username}}</p></div>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdown01">
+              <a class="dropdown-item" href="/{{navBar.username}}/profile">View Profile</a>
+              <a class="dropdown-item" href="/{{navBar.username}}/repo/org">View Org</a>
+              <a class="dropdown-item" href="/{{navBar.username}}/repo">View User Repo</a>
+              <div class="dropdown-divider"></div>
+              <form method="POST" action="/logout"><div class="margin"><button type="submit" class="btn btn-danger margin btn-sm">Log Out</button></div></form>
+            </div>
+         </li>
         {{/if}}
       </li>
     </ul>

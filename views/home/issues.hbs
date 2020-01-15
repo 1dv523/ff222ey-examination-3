@@ -1,5 +1,12 @@
+<style>
+.inline {
+  display: inline-block;
+  margin: 1em 1em 1em 0
+}
+</style>
 {{#each issues }}
-<div class="card" style="width: 28rem;">
+<div class="inline">
+  <div class="card" style="width: 32rem;">
   <div class="card-body">
     <h5 class="card-title">{{this.title}}</h5>
     <h6 class="card-subtitle mb-2 text-muted">{{this.user}}</h6>
@@ -11,5 +18,6 @@
     <a href="#" class="card-link">Comment</a>
     <a href="#" class="card-link">Delete Issue</a>
   </div>
+</div>
 </div>
 {{/each}}
