@@ -13,7 +13,7 @@ passport.deserializeUser(async (user, done) => {
 passport.use(new GitHubStrategy({
   clientID: process.env.client_id,
   clientSecret: process.env.client_secret,
-  callbackURL: 'https://399e129b.ngrok.io/auth/github/callback'
+  callbackURL: 'https://cscloud702.lnu.se/auth/github/callback'
 },
 async (accessToken, refreshToken, profile, done) => {
   const user = {
