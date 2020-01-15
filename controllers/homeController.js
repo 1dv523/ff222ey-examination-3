@@ -59,6 +59,8 @@ homeController.profile = async (req, res, next) => {
   ghme.orgs(async function (err, body, status) {
     if (err) {
       console.log(err)
+      err.status = 500
+      return next(err)
     }
 
     for (const org of body) {
@@ -81,6 +83,7 @@ homeController.profile = async (req, res, next) => {
     }
     profile.org = orgRepos
     req.user.profile = profile
+    console.log('the lenght is', profile.user)
     const info = [{ name: ' User Repos ', count: profile.user.length, user: true, username: req.user.username }, { name: 'Org', count: profile.org.length, username: req.user.username }]
     res.render('profile/profile', { info })
   })
