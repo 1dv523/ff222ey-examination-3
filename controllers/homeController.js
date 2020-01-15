@@ -38,6 +38,7 @@ homeController.hooks = (req, res, next) => {
 
 homeController.profile = async (req, res, next) => {
   const token = req.user.accessToken
+  console.log(token)
   client = github.client(token)
   const profile = {}
   const ghme = client.me()
