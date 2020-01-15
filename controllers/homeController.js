@@ -43,52 +43,40 @@ homeController.profile = async (req, res, next) => {
   const ghme = client.me()
   const userRepos = []
   const orgRepos = []
-  ghme.repos(function (err, body, status) {
-    if (err) {
-      console.log(err)
-    }
+  let body = await ghme.reposAsync()
 
-    body.forEach(element => {
-      if (element.owner.type === 'User') {
-        userRepos.push({ name: element.name, url: element.full_name, img: element.owner.avatar_url, user: element.owner.login })
-      }
-    })
-    console.log(body)
-    profile.user = userRepos
+  body[0].forEach(element => {
+    if (element.owner.type === 'User') {
+      userRepos.push({ name: element.name, url: element.full_name, img: element.owner.avatar_url, user: element.owner.login })
+    }
   })
+  profile.user = userRepos
 
-  ghme.orgs(async function (err, body, status) {
-    if (err) {
-      console.log(err)
-      err.status = 500
-      return next(err)
+  body = await ghme.orgsAsync()
+
+  for (const org of body[0]) {
+    console.log(org)
+    const url = org.repos_url
+    const result = await client.getAsync(url)
+    if (result[0] === 200) {
+      const lol = []
+      result[1].forEach(element => {
+      // console.log(element)
+        const filtered = _.pick(element, 'name', 'full_name', 'html_url', 'hooks_url', 'id')
+        lol.push(filtered)
+      })
+
+      orgRepos.push({ name: org.login, img: org.avatar_url, url: org.repos_url, user: req.user.username, repos: lol })
+    } else {
+      err.status = 500 //TODO CHECK FOR A BETTER CODE
+      next(500)
     }
+  }
 
-    for (const org of body) {
-      console.log(org)
-      const url = org.repos_url
-      const result = await client.getAsync(url)
-      if (result[0] === 200) {
-        const lol = []
-        result[1].forEach(element => {
-        // console.log(element)
-          const filtered = _.pick(element, 'name', 'full_name', 'html_url', 'hooks_url', 'id')
-          lol.push(filtered)
-        })
-
-        orgRepos.push({ name: org.login, img: org.avatar_url, url: org.repos_url, user: req.user.username, repos: lol })
-      } else {
-        err.status = 500 //TODO CHECK FOR A BETTER CODE
-        next(500)
-      }
-    }
-    profile.org = orgRepos
-    req.user.profile = profile
-    console.log('the lenght is', profile.user)
-    console.log(userRepos)
-    const info = [{ name: ' User Repos ', count: profile.user.length, user: true, username: req.user.username }, { name: 'Org', count: profile.org.length, username: req.user.username }]
-    res.render('profile/profile', { info })
-  })
+  profile.org = orgRepos
+  req.user.profile = profile
+  const info = [{ name: ' User Repos ', count: profile.user.length, user: true, username: req.user.username }, { name: 'Org', count: profile.org.length, username: req.user.username }]
+  res.render('profile/profile', { info })
 }
 
 homeController.checkAuth = (req, res, next) => {
