@@ -20,10 +20,10 @@ const moment = require('moment')
 const flash = require('connect-flash')
 const csrf = require('csurf')
 
+const allClients = []
 const app = express()
 const server = http.createServer(app)
 let csurfToken
-let allClients = []
 
 const sessionStore = new RedisStore({ host: 'localhost', port: 6379, client: redisClient, ttl: 86400 })
 
@@ -62,20 +62,11 @@ io
   .on('connection', function (socket) {
     let userId = socket.request.session.passport
     if (userId) {
-      console.log(userId)
-      // console.log(socket.request.session.passport.user)
-      // allClients.push(socket.id)
       userId = userId.user.username
-      allClients.push({ socket, id: userId })
-
-      // console.log(allClients)
-      // if (allClients) {
-      //   allClients.push(socket)
-      //   // console.log(allClients)
-      // } else {
-      //   allClients = []
-      //   allClients.push(socket)
-      // }
+      if (socket.connected) {
+        console.log(socket.connected)
+        allClients.push({ socket, id: userId })
+      }
       socket.request.session.passport.user.allClients = allClients
       console.log(allClients.length)
       socket.request.session.passport.user.allClients = allClients
@@ -87,10 +78,9 @@ io
       console.log('Your User ID is', userId)
       socket.on('disconnect', function () {
         console.log('Got disconnect!', allClients.length)
-        var i = allClients.indexOf(socket)
+        const i = allClients.indexOf(socket)
         allClients.splice(i, 1)
         console.log(allClients.length)
-        socket.request.session.passport.user.allClients = allClients
       })
     }
   })
@@ -168,7 +158,7 @@ webhookHandler.on('issues', function (repo, data) {
   const updated = obj.issue.updated_at
   obj.issue.created_at = moment(created).format('MMMM Do YYYY, h:mm a')
   obj.issue.updated_at = moment(updated).format('MMMM Do YYYY, h:mm a')
-  const arr = allClients.filter(e => e.id === id)
+  const arr = allClients.filter(e => e.id === id && arr.socket.connected)
   console.log(arr)
   // const allClients = app.get(id)
   if (arr.length > 0) {

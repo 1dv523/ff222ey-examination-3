@@ -1,8 +1,8 @@
 'use strict'
+import { socket } from './client.js'
 
 console.log('hello worldss')
 
-const socket = window.io()
 const notis = document.getElementById('notis')
 const notisBar = document.getElementById('notisBar')
 const template = document.createElement('template')

@@ -63,7 +63,7 @@
   <ul class="list-group list-group-flush">
     {{#each hooks }}
       <li class="list-group-item">{{this.name}}
-        <form action="/deleteHook/{{this.name}}" id="{{this.id}}" method="POST">
+        <form action="/deleteHook/{{this.id}}/{{this.name}}" id="{{this.id}}" method="POST">
         <a href="#"><p onclick="document.getElementById({{this.id}}).submit(); return false;" class="text-danger">Remove Hook</p> 
         </a>
          <input type="hidden" name="_csrf" value="{{../csrfToken}}">
@@ -88,5 +88,5 @@
   </div>
 </div>
 
-<script src="/scripts/client.js"></script>
+{{!-- <script src="/scripts/client.js"></script> --}}
 

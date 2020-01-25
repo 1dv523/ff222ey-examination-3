@@ -2,7 +2,7 @@
 
 console.log('hello worldss')
 
-const socket = window.io()
+export const socket = window.io()
 const notis = document.getElementById('notis')
 const notisBar = document.getElementById('notisBar')
 const template = document.createElement('div')
@@ -94,6 +94,10 @@ function deleteThis (e) {
   const div = document.getElementById(id)
   div.remove()
 }
+
+window.addEventListener('beforeunload', function (e) {
+  socket.disconnect()
+})
 
 /*
 if ('Notification' in window) {

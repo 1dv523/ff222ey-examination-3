@@ -1,11 +1,12 @@
 // import { formatWithOptions } from "util";
+import { socket } from './client.js'
 
-const sockets = window.io()
+// const sockets = window.io()
 
-sockets.emit('token')
+socket.emit('token')
 let token
 
-sockets.on('token', function (data) {
+socket.on('token', function (data) {
   token = data
   console.log(data)
 })

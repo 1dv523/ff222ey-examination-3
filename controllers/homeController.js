@@ -146,32 +146,38 @@ homeController.deleteHook = async (req, res, next) => {
   const client = github.client(token)
   const name = req.params.id
   const name2 = req.params.id2
+  const hookId = req.params.hookId
   const repo = `${name}/${name2}`
   let hooks = req.user.hooks
   const ghrepo = client.repo(repo)
-  ghrepo.hooks(async function (err, status, body, headers) {
-    if (err) {
-      // console.log(err)
-      if (err.statusCode === 404) {
-        err.status = 404
-        return next(err)
-      } else {
-        err.status = 500
-        return next(err)
-      }
-    }
-    if (status) {
-      if (status.length > 0) {
-        for (const hook of status) {
-          const id = hook.id
-          await ghrepo.deleteHookAsync(id)
-        }
-        hooks = hooks.filter(hook => { return hook.name !== repo })
-      }
-    }
-    req.user.hooks = hooks
-    res.redirect('/')
-  })
+  await ghrepo.deleteHookAsync(hookId)
+  hooks = hooks.filter(hook => { return hook.name !== repo })
+  req.user.hooks = hooks
+  res.redirect('/')
+
+  // ghrepo.hooks(async function (err, status, body, headers) {
+  //   if (err) {
+  //     // console.log(err)
+  //     if (err.statusCode === 404) {
+  //       err.status = 404
+  //       return next(err)
+  //     } else {
+  //       err.status = 500
+  //       return next(err)
+  //     }
+  //   }
+  //   if (status) {
+  //     if (status.length > 0) {
+  //       for (const hook of status) {
+  //         const id = hook.id
+  //         await ghrepo.deleteHookAsync(id)
+  //       }
+  //       hooks = hooks.filter(hook => { return hook.name !== repo })
+  //     }
+  //   }
+  //   req.user.hooks = hooks
+  //   res.redirect('/')
+  // })
 }
 
 homeController.toggleHook = async (req, res, next) => {
@@ -277,10 +283,13 @@ homeController.profile = async (req, res, next) => {
           // console.log(err)
         }
         if (status) {
+          console.log(status)
+          const hook = status.find(e => e.config.url.includes(process.env.url))
           availableHooks.push({ name: repo })
-          if (status.length > 0) {
-            hooks.push({ name: repo, id: counter })
+          if (hook) {
+            hooks.push({ name: repo, id: hook.id })
           }
+          console.log(hook)
         }
         if (counter === allRepos.length) {
           resolve()
