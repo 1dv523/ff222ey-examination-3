@@ -1,3 +1,15 @@
+// import { formatWithOptions } from "util";
+
+const sockets = window.io()
+
+sockets.emit('token')
+let token
+
+sockets.on('token', function (data) {
+  token = data
+  console.log(data)
+})
+
 window.$('.toggle').change(function (e) {
   const lol = e.target
   const name = lol.getAttribute('data-name')
@@ -9,6 +21,11 @@ window.$('.toggle').change(function (e) {
 
 function post (path, params, method = 'post') {
   const form = document.createElement('form')
+  const input = document.createElement('input')
+  input.setAttribute('type', 'hidden')
+  input.setAttribute('name', '_csrf')
+  input.setAttribute('value', token)
+  form.append(input)
   form.method = method
   form.action = path
 

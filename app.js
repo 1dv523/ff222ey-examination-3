@@ -76,6 +76,10 @@ io
       userId = userId.user.username
       socket.request.session.passport.user.allClients = allClients
       app.set(userId, allClients)
+      socket.on('token', function () {
+        console.log('token mate')
+        socket.emit('token', socket.request.session.passport.user.csrfToken)
+      })
       console.log('Your User ID is', userId)
       socket.on('disconnect', function () {
         console.log('Got disconnect!', allClients.length)
