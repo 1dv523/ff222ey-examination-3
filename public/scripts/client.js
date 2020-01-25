@@ -63,7 +63,7 @@ socket.on('issue_comment', function (data) {
 socket.on('issues', function (data) {
   console.log(data)
   counter++
-  const alert = template.content.cloneNode(true)
+  const alert = template.cloneNode(true)
   const body = alert.querySelector('.toast-body')
   const heading = alert.querySelector('.headings')
   const img = alert.querySelector('.img')
