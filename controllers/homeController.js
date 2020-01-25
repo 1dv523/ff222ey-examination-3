@@ -298,7 +298,7 @@ homeController.profile = async (req, res, next) => {
   const info = [{ name: ' User Repos ', count: profile.user.length, user: true, username: req.user.username }, { name: 'Org', count: profile.org.length, username: req.user.username }]
   let flash = req.flash('info')
   flash = flash[0]
-  res.render('profile/profile', { info, hooks, flash, csrfToken: req.csrfToken() })
+  res.render('profile/profile', { info, hooks, flash, csrfToken: req.user.csrfToken })
 }
 
 homeController.checkAuth = (req, res, next) => {
