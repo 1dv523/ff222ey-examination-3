@@ -62,20 +62,26 @@ io
   .on('connection', function (socket) {
     let userId = socket.request.session.passport
     if (userId) {
+      console.log(userId)
       // console.log(socket.request.session.passport.user)
       // allClients.push(socket.id)
-      if (allClients) {
-        allClients.push(socket)
-        // console.log(allClients)
-      } else {
-        allClients = []
-        allClients.push(socket)
+      userId = userId.user.username
+      if (!allClients.includes({ socket, id: userId })) {
+        allClients.push({ socket, id: userId })
       }
+
+      // console.log(allClients)
+      // if (allClients) {
+      //   allClients.push(socket)
+      //   // console.log(allClients)
+      // } else {
+      //   allClients = []
+      //   allClients.push(socket)
+      // }
       socket.request.session.passport.user.allClients = allClients
       console.log(allClients.length)
-      userId = userId.user.username
       socket.request.session.passport.user.allClients = allClients
-      app.set(userId, allClients)
+      // app.set(userId, allClients)
       socket.on('token', function () {
         console.log('token mate')
         socket.emit('token', socket.request.session.passport.user.csrfToken)
@@ -142,11 +148,14 @@ webhookHandler.on('issue_comment', function (repo, data) {
   const updated = obj.comment.updated_at
   obj.comment.created_at = moment(created.updated_at).calendar()
   obj.comment.updated_at = moment(updated.updated_at).calendar()
-  const allClients = app.get(id)
-  if (allClients.length > 0) {
-    for (const jo of allClients) {
+  const arr = allClients.filter(e => e.id === id)
+  console.log(arr)
+  // const allClients = app.get(id)
+  if (arr.length > 0) {
+    for (const jo of arr) {
+      const socket = jo.socket
       console.log(jo.id)
-      jo.emit('issue_comment', obj)
+      socket.emit('issue_comment', obj)
     }
     console.log('I am here lol')
   }
@@ -161,11 +170,14 @@ webhookHandler.on('issues', function (repo, data) {
   const updated = obj.issue.updated_at
   obj.issue.created_at = moment(created).format('MMMM Do YYYY, h:mm a')
   obj.issue.updated_at = moment(updated).format('MMMM Do YYYY, h:mm a')
-  const allClients = app.get(id)
-  if (allClients.length > 0) {
-    for (const jo of allClients) {
+  const arr = allClients.filter(e => e.id === id)
+  console.log(arr)
+  // const allClients = app.get(id)
+  if (arr.length > 0) {
+    for (const jo of arr) {
+      const socket = jo.socket
       console.log(jo.id)
-      jo.emit('issues', obj)
+      socket.emit('issues', obj)
     }
     console.log('I am here lol')
   }
