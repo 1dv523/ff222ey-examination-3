@@ -2,29 +2,98 @@
 
 console.log('hello worldss')
 
-const socket = window.io.connect('http://localhost:4567')
-const button = document.querySelector('#login')
-
-button.addEventListener('click', function (event) {
-  console.log('pressed lol')
-  const url = 'https://github.com/login/oauth/authorize'
-  window.fetch(url, {
-    method: 'post',
-    headers: {
-      client_id: '585e50100463423888df',
-      scope: 'repo'
-    },
-    body: 'foo=bar&lorem=ipsum'
-  })
+const socket = window.io()
+const notis = document.getElementById('notis')
+const notisBar = document.getElementById('notisBar')
+const template = document.createElement('div')
+template.innerHTML = `
+<div role="alert" aria-live="assertive" aria-atomic="true" class="toast show" data-autohide="false">
+<div class="toast-header">
+  <img src="..." class="rounded mr-2 img" alt="...">
+  <strong class="mr-auto headings">Bootstrap</strong>
+  <small id="time">11 mins ago</small>
+  <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+  <span aria-hidden="true" class="del" >&times;</span>
+</button>
+</div>
+<div class="toast-body">
+  Hello, world! This is a toast message.
+</div>
+</div>
+`
+let counter = 0
+let id = 0
+window.$('.close').click(function (e) {
+  const id = e.target.getAttribute('data-id')
+  console.log(id)
+  const div = document.getElementById(id)
+  div.remove()
+  // const parent = $(this).parentNode
+  // console.log('the oarent is ', parent)
+  // parent.remove()
 })
-// const socket = io.connect('http://cscloud702.lnu.se.')
-socket.on('message', function (data) {
-  console.log('message arrived')
+socket.on('issue_comment', function (data) {
   console.log(data)
-  // const p = document.getElementsByTagName('p')[0]
-  // console.log(p)
-  // p.textContent = data.message
+  counter++
+  id++
+  const alert = template.cloneNode(true)
+  alert.setAttribute('id', id)
+  const body = alert.querySelector('.toast-body')
+  const heading = alert.querySelector('.headings')
+  const img = alert.querySelector('.img')
+  const del = alert.querySelector('.del')
+  del.setAttribute('data-id', id)
+  img.setAttribute('src', data.sender.avatar_url)
+  notis.textContent = counter
+  if (data.action === 'deleted') {
+    body.textContent = `${data.sender.login} deleted an issue comment on ${data.repository.full_name}`
+    heading.textContent = 'Comment Deleted'
+  } else if (data.action === 'edited') {
+    body.textContent = `${data.sender.login} edited an issue comment on ${data.repository.full_name}`
+    heading.textContent = 'Comment Edited'
+  } else if (data.action === 'created') {
+    heading.textContent = 'New Comment'
+    body.textContent = `${data.sender.login} created a new comment on ${data.repository.full_name}`
+  } else {
+
+  }
+  notisBar.append(alert)
 })
+
+socket.on('issues', function (data) {
+  console.log(data)
+  counter++
+  const alert = template.content.cloneNode(true)
+  const body = alert.querySelector('.toast-body')
+  const heading = alert.querySelector('.headings')
+  const img = alert.querySelector('.img')
+  img.setAttribute('src', data.sender.avatar_url)
+  notis.textContent = counter
+
+  if (data.action === 'edited') {
+    body.textContent = `${data.sender.login} edited an issue name on ${data.repository.full_name}`
+    heading.textContent = 'Issue edited'
+  } else if (data.action === 'closed') {
+    body.textContent = `${data.sender.login} closed an issue on ${data.repository.full_name}`
+    heading.textContent = 'Issue closed'
+  } else if (data.action === 'reopened') {
+    body.textContent = `${data.sender.login} reopened an issue on ${data.repository.full_name}`
+    heading.textContent = 'Issue reopened'
+  } else if (data.action === 'opened') {
+    body.textContent = `${data.sender.login} created a new issue on ${data.repository.full_name}`
+    heading.textContent = 'New issue'
+  } else {
+
+  }
+  notisBar.append(alert)
+})
+
+function deleteThis (e) {
+  const id = e.target.getAttribute('data-id')
+  console.log(id)
+  const div = document.getElementById(id)
+  div.remove()
+}
 
 /*
 if ('Notification' in window) {

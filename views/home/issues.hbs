@@ -1,23 +1,80 @@
 <style>
-.inline {
-  display: inline-block;
+.child {
   margin: 1em 1em 1em 0
 }
+
+p {
+  padding: 0;
+  margin: 0;
+}
+
+.lol2 {
+  display: block;
+}
+
+.flex {
+  order: -1;
+}
+
+.lol {
+  font-family: sans-serif;
+  font-size: 14px;
+  display: inline;
+  color: blue;
+  padding-left: 0.4em;
+  padding-bottom: 1em;
+}
+
+#container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.two {
+  display: inline;
+}
+
+.text {
+  margin-bottom: 1em;
+}
+
+
+
+.one { font-style: italic; }
+
+.toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
+  .toggle.ios .toggle-handle { border-radius: 20px; }
 </style>
+<div id="container">
 {{#each issues }}
-<div class="inline">
+<div class="child" data-issue="{{this.id}}">
   <div class="card" style="width: 32rem;">
   <div class="card-body">
     <h5 class="card-title">{{this.title}}</h5>
     <h6 class="card-subtitle mb-2 text-muted">{{this.user}}</h6>
-    <p class="card-text">{{this.body}}</p>
-    <a href="{{this.url}}">{{this.url}}</a>
-    <p><span class="font-weight-bold">Comments:</span> {{this.comments}}</p>
+    <p class="card-text text">{{this.body}}</p>
+    <a class="lol2" href="{{this.url}}">{{this.url}}</a>
+    <p class="two"><span class="font-weight-bold"> Comments:</span> {{this.comments}}</p>
+      {{#if ../org }}
+         <a href="/{{../navBar.username}}/repo/{{../org}}/issues/{{this.number}}/{{../repo}}/comments"><p class="one lol">Show.</p></a> 
+         {{else}}
+         <a href="/{{../navBar.username}}/repo/issues/{{this.number}}/{{../repo}}/comments"><p class="one lol">Show.</p></a> 
+      {{/if}}
     <p><span class="font-weight-bold">Created at:</span> {{this.created}}</p>
     <p><span class="font-weight-bold">Last Updated:</span> {{this.updated}}</p>
-    <a href="#" class="card-link">Comment</a>
-    <a href="#" class="card-link">Delete Issue</a>
+    <form action="/closeIssue/{{this.number}}/{{this.full_name}}" id="{{this.id}}" class="form" method="POST">
+    <a href="#"><p onclick="document.getElementById({{this.id}}).submit(); return false;" class="text-danger">Close issue</p>
+     </a>
+     <input type="hidden" name="_csrf" value="{{../csrfToken}}">
+     </form>
   </div>
 </div>
 </div>
 {{/each}}
+</div>
+
+<script src="/scripts/socketIssues.js"></script>
+
+
+
+

@@ -13,9 +13,19 @@ const webhookHandler = GithubWebHook({ path: '/hooks', secret: process.env.GITHU
 const socket = require('socket.io')
 const dotenv = require('dotenv')
 const passport = require('passport')
+const redis = require('redis')
+const redisClient = redis.createClient()
+const RedisStore = require('connect-redis')(session)
+const moment = require('moment')
+const flash = require('connect-flash')
+const csrf = require('csurf')
 
 const app = express()
 const server = http.createServer(app)
+let csurfToken
+let allClients = []
+
+const sessionStore = new RedisStore({ host: 'localhost', port: 6379, client: redisClient, ttl: 86400 })
 
 dotenv.config({
   path: './.env'
@@ -23,7 +33,8 @@ dotenv.config({
 
 require('./config/passport-setup')
 
-const sessionOptions = {
+var sessionMiddleware = session({
+  key: 'express.sid',
   name: process.env.SESSION_NAME,
   secret: process.env.SESSION_SECRET,
   resave: false, // Resave even if a request is not changing the session.
@@ -32,22 +43,55 @@ const sessionOptions = {
     maxAge: 1000 * 60 * 60 * 24, // % 1 day
     sameSite: 'lax', // change to lax maybe
     HttpOnly: true
-  }
-}
-
-app.use(session(sessionOptions))
+  },
+  store: sessionStore
+})
+var csrfProtection = csrf({ cookie: true })
+app.use(sessionMiddleware)
 app.use(passport.initialize())
 app.use(passport.session())
+app.use(flash())
+app.use(cookieParser())
 
-const io = socket(server)
-
-io.on('connection', function (socket) {
-  console.log('Connected')
-  app.set('socket', socket)
-})
+const io = socket(server, { pingInterval: 2000, pingTimeout: 5000 })
+io
+  .use(function (socket, next) {
+    // Wrap the express middleware
+    sessionMiddleware(socket.request, {}, next)
+  })
+  .on('connection', function (socket) {
+    let userId = socket.request.session.passport
+    if (userId) {
+      // console.log(socket.request.session.passport.user)
+      // allClients.push(socket.id)
+      if (allClients) {
+        allClients.push(socket)
+        // console.log(allClients)
+      } else {
+        allClients = []
+        allClients.push(socket)
+      }
+      socket.request.session.passport.user.allClients = allClients
+      console.log(allClients.length)
+      userId = userId.user.username
+      socket.request.session.passport.user.allClients = allClients
+      app.set(userId, allClients)
+      console.log('Your User ID is', userId)
+      socket.on('disconnect', function () {
+        console.log('Got disconnect!', allClients.length)
+        var i = allClients.indexOf(socket)
+        allClients.splice(i, 1)
+        console.log(allClients.length)
+        socket.request.session.passport.user.allClients = allClients
+      })
+    }
+  })
 
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }))
+// parse application/json
+app.use(bodyParser.json())
 
 app.get('/error', (req, res) => {
   console.log('lol')
@@ -55,12 +99,20 @@ app.get('/error', (req, res) => {
   // process.exit(1)
 })
 
-app.use((req, res, next) => {
+app.use(webhookHandler)
+
+app.use(csrfProtection, (req, res, next) => {
   if (req.user) {
+    // if (allClients) {
+    //   req.user.allClients = allClients
+    // }
+    csurfToken = req.csrfToken()
+    req.user.csrfToken = csurfToken
+    // res.locals.flash = flash
     res.locals.loggedIn = true
     res.locals.navBar = req.user
-    delete req.session.flash
   }
+
   if (req.session.userId) {
     const lol = {}
     lol.id = req.session.userId
@@ -74,22 +126,41 @@ app.use('/', require('./routes/homeRouter.js'))
 app.use('/:id', require('./routes/repoRouter.js'))
 app.use('/auth', require('./routes/auth-routes.js'))
 
-app.use(bodyParser.urlencoded({ extended: false }))
-// parse application/json
-app.use(bodyParser.json())
-
-app.use(webhookHandler) // use our middleware
+// use our middleware
 
 webhookHandler.on('issue_comment', function (repo, data) {
   console.log('comment')
-  const socket = app.get('socket')
-  socket.emit('message', data)
+  const obj = JSON.parse(data.payload)
+  obj.token = csurfToken
+  console.log(obj)
+  const id = obj.issue.user.login
+  const created = obj.comment.created_at
+  const updated = obj.comment.updated_at
+  obj.comment.created_at = moment(created.updated_at).calendar()
+  obj.comment.updated_at = moment(updated.updated_at).calendar()
+  const allClients = app.get(id)
+  if (allClients.length > 0) {
+    for (const jo of allClients) {
+      console.log(jo.id)
+      jo.emit('issue_comment', obj)
+    }
+    console.log('I am here lol')
+  }
 })
 
 webhookHandler.on('issues', function (repo, data) {
   console.log('issues')
-  const socket = app.get('socket')
-  socket.emit('message', data)
+  const obj = JSON.parse(data.payload)
+  obj.token = csurfToken
+  const id = obj.issue.user.login
+  const created = obj.issue.created_at
+  const updated = obj.issue.updated_at
+  obj.issue.created_at = moment(created).format('MMMM Do YYYY, h:mm a')
+  obj.issue.updated_at = moment(updated).format('MMMM Do YYYY, h:mm a')
+  const socket = app.get(id)
+  if (socket) {
+    socket.emit('issues', obj)
+  }
 })
 
 webhookHandler.on('error', function (err, req, res) {

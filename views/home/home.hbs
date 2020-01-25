@@ -8,6 +8,8 @@
     display: block;
     margin-bottom: 2em;
   }
+  .toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
+  .toggle.ios .toggle-handle { border-radius: 20px; }
 </style>
 
 {{#if org }}
@@ -20,17 +22,45 @@
 <div class="inline">
 <div class="card w-100">
   <div class="card-body">
-    <h5 class="card-title">{{this.name}}</h5>
+    <div class="d-flex justify-content-between">
+      <h4 class="card-title">{{this.name}}</h4>
+        {{#if this.hook }}
+            {{#if this.full_name }}
+                <input type="checkbox" class="toggle" checked data-toggle="toggle" data-type="{{../org}}" data-name="{{this.full_name}}" data-on="Hook on" data-off="Hook off" data-onstyle="success" data-offstyle="danger" data-size="small" data-style="ios">
+                {{else}}
+                 <input type="checkbox" class="toggle" checked data-toggle="toggle" data-type="{{../org}}" data-name="{{this.name}}" data-on="Hook on" data-off="Hook off" data-onstyle="success" data-offstyle="danger" data-size="small" data-style="ios">
+            {{/if}}
+         
+        {{else}}
+            {{#if this.hookPossible }}
+                  {{#if this.full_name }}
+                <input type="checkbox" class="toggle" unchecked data-toggle="toggle" data-type="{{../org}}" data-name="{{this.full_name}}" data-on="Hook on" data-off="Hook off" data-onstyle="success" data-offstyle="danger" data-size="small" data-style="ios">
+                {{else}}
+                 <input type="checkbox" class="toggle" unchecked data-toggle="toggle" data-type="{{../org}}" data-name="{{this.name}}" data-on="Hook on" data-off="Hook off" data-onstyle="success" data-offstyle="danger" data-size="small" data-style="ios">
+            {{/if}}
+                {{!-- <input type="checkbox" unchecked data-toggle="toggle" data-on="Hook on" data-off="Hook off" data-onstyle="success" data-offstyle="danger" data-size="small" data-style="ios"> --}}
+              {{else}}
+                <input type="checkbox"class="toggle" unchecked disabled="true" data-toggle="toggle" data-type="{{../org}}" data-off="N/A"data-onstyle="danger" data-offstyle="info" data-size="small" data-style="ios">
+              {{/if}}
+        {{/if}}
+       {{!-- <input type="checkbox" checked data-toggle="toggle" data-on="Hook on" data-off="Hook off" data-onstyle="success" data-offstyle="danger" data-size="small" data-style="ios">
+       <input type="checkbox" unchecked disabled="true" data-toggle="toggle" data-off="NA"data-onstyle="danger" data-offstyle="info" data-size="small" data-style="ios"> --}}
+    </div>
     <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
       {{#if ../org }}
        <a href="/{{../navBar.username}}/repo/{{../org}}/issues/{{this.name}}" class="btn btn-primary btn-sm">View Issues</a>
       {{else}}
-        <a href="/{{../navBar.username}}/repo/issues/{{this.name}}" class="btn btn-primary btn-sm">View Issues</a>
+        <a href="/{{../navBar.username}}/repo/issues/{{this.repo}}" class="btn btn-primary btn-sm">View Issues</a>
       {{/if}}
   </div>
 </div>
 </div>
 {{/each}}
+
+<script src="/scripts/client.js"></script>
+<script src="/scripts/hooks.js" ></script>
+
+
 
 
 {{!-- <script>

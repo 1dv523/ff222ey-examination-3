@@ -1,10 +1,10 @@
   
 <style>
   .img {
-    width: 35px;
+    width: 18px;
   }
   .username {
-    font-size: 15px;
+    font-size: 10px;
     padding-left: 1em;
     display: inline;
   }
@@ -13,12 +13,32 @@
     margin-left: 0.8em;
     padding: 0em;
   }
+  .notis {
+    margin-top: 0.5em;
+  }
+
+  .size {
+    width: 350px;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+   .show {
+  opacity: 1;
+}
 </style>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
     <a href="/" class="navbar-brand">Got an Issue?</a>
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
         {{#if loggedIn }}
+        <li class="nav-item avatar dropdown">
+            <a class="nav-link waves-effect waves-light" id="navbarDropdownMenuLink-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <span class="badge badge-danger ml-2" id="notis"></span>
+              <i class="fas fa-bell"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg-right size" id="notisBar" aria-labelledby="navbarDropdownMenuLink-5"></div>
+          </li>
+      <li class="nav-item">
           <li class="nav-item dropdown ">
             <a class="nav-link text-light" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <div class="dropdown-toggle"><img src="{{navBar.avatar_url}}" class="img"><p class="username">{{navBar.username}}</p></div>
@@ -34,7 +54,10 @@
         {{/if}}
       </li>
     </ul>
-    <div class="dropdown">
-</div>
   </div>
-  </nav>
+</nav>
+
+   {{!-- <a class="dropdown-item waves-effect waves-light" href="#">  --}}
+              {{!-- <a class="dropdown-item waves-effect waves-light" href="#">Action <span class="badge badge-danger ml-2">4</span></a>
+              <a class="dropdown-item waves-effect waves-light" href="#">Another action <span class="badge badge-danger ml-2">1</span></a>
+              <a class="dropdown-item waves-effect waves-light" href="#">Something else here <span class="badge badge-danger ml-2">4</span></a> --}}

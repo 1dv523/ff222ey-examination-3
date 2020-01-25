@@ -1,0 +1,15 @@
+<div class="inline">
+  <div class="card" style="width: 32rem;">
+  <div class="card-body">
+    <h5 class="card-title">{{this.title}}</h5>
+    <h6 class="card-subtitle mb-2 text-muted">{{this.user}}</h6>
+    <p class="card-text text">{{this.body}}</p>
+    <a class="lol2" href="{{this.url}}">{{this.url}}</a>
+    <p class="two"><span class="font-weight-bold"> Comments:</span> {{this.comments}}</p>
+    <a href="/{{../navBar.username}}/repo/{{../org}}/issues/{{this.number}}/{{../repo}}/comments"><p class="one lol">Show.</p></a> 
+    <p><span class="font-weight-bold">Created at:</span> {{this.created}}</p>
+    <p><span class="font-weight-bold">Last Updated:</span> {{this.updated}}</p>
+    <form action="/closeIssue" method="POST"><p class="text-danger">Close issue</p></form>
+  </div>
+</div>
+</div>

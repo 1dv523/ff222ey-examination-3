@@ -1,0 +1,97 @@
+<style>
+@import "/css/comment.css";
+.flex{
+  width: 100%;
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.flexy{
+  display: flex;
+  flex-direction: column;
+}
+.newFlex {
+  display: flex;
+  flex-direction: column-reverse;
+}
+.commentPost {
+  width: 75%;
+  margin: auto;
+}
+.h4Head{
+  margin-top: 1em;
+}
+
+.lolol {
+  font-size: 20px;
+}
+
+</style>
+    <div class="comments-container">
+        <h1>Comments</h1>
+        <div class="flex">
+        <ul id="comments-list" class="comments-list flexy">
+          {{#each comments }}
+              {{#if this.owner }}
+                <li data-comment="{{this.id}}" class="child">
+                <div class="comment-main-level">
+                  <!-- Avatar -->
+                  <div class="comment-avatar"><img src="{{this.img}}" alt=""></div>
+                  <div class="comment-box">
+                      <div class="comment-head">
+                          <h6 class="comment-name by-author"><a href="#">{{this.author}}</a></h6>
+                          <span>{{this.updated}}</span>
+                          <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                            <form action="/deleteIssueComment/{{../num}}/{{../fullName}}/{{this.id}}" method="POST" id="{{this.id}}">
+                            <span style="font-size: 20px" onclick="document.getElementById({{this.id}}).submit(); return false;" aria-hidden="true">&times;</span>
+                            <input type="hidden" name="_csrf" value="{{../csrfToken}}">
+                            </form>
+                        </button>
+                      </div>
+                      <div class="comment-content">
+                        {{this.body}}
+                      </div>
+                  </div>
+                </div>
+              </li>
+                {{else}}
+                  <li class="child">
+                  <div class="comment-main-level">
+                      <!-- Avatar -->
+                      <div class="comment-avatar"><img src="{{this.img}}" alt=""/></div>
+                      <div class="comment-box">
+                          <div class="comment-head">
+                              <h6 class="comment-name"><a href="#">{{this.author}}</a></h6>
+                              <span>{{this.updated}}</span>
+                              <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                                  <form action="/deleteIssueComment/{{../num}}/{{../fullName}}/{{this.id}}" method="POST" id="{{this.id}}">
+                                  <span style="font-size: 20px" onclick="document.getElementById({{this.id}}).submit(); return false;" aria-hidden="true">&times;</span>
+                                  <input type="hidden" name="_csrf" value="{{../csrfToken}}">
+                                  </form>
+                              </button>
+                          </div>
+                          <div class="comment-content">
+                              {{this.body}}
+                          </div>
+                      </div>
+                  </div>
+              </li>
+              {{/if}}
+          {{/each}}
+        </ul>
+        </div>
+    </div>
+
+<div class="commentPost">
+  <form action="/createIssueComment/{{num}}/{{fullName}}" method="POST">
+  <div class="form-group">
+    <h4 class="h4Head">Post a Commment</h4>
+    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="comment"></textarea>
+  </div>
+   <button type="submit" class="btn btn-primary">Submit</button>
+   <input type="hidden" name="_csrf" value="{{csrfToken}}">
+</form>
+</div>
+
+<script src="/scripts/client.js"></script>
+<script src="/scripts/socketComments.js"></script>

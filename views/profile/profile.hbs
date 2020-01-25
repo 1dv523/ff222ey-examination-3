@@ -1,18 +1,92 @@
-{{#each info }}
-<div class="row">
-  <div class="col-sm-6">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">{{this.name}}</h5>
-        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-        {{#if this.user }}
-         <p><span class="font-weight-bold">No of repos:</span> {{this.count}}</p>
-         <a href="/{{this.username}}/repo" class="btn btn-primary btn-sm">See all user repos</a>
-         {{else}}
-         <p><span class="font-weight-bold">No of Orgs:</span> {{this.count}}</p>
-         <a href="/{{this.username}}/repo/org" class="btn btn-primary btn-sm">See all Orgs</a>
-        {{/if}}
+<style>
+  .box {
+    margin: 1em;
+  }
+
+  .heading {
+    margin-top: 3em;
+    margin-bottom: 0.3em;
+  }
+
+  .show {
+  opacity: 1;
+}
+</style>
+  
+<div class="container">
+  <div class="row">
+    <div class="col-10">
+      <div class="card mt-3 tab-card">
+        <div class="card-header tab-card-header">
+          <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="One" aria-selected="true">User Repo</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="Two" aria-selected="false">Org</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="tab-content" id="myTabContent">
+            {{#each info }}
+              {{#if this.user }}
+                <div class="tab-pane fade show active p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
+                  <h5 class="card-title">User Repos</h5>
+                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                  <p><span class="font-weight-bold">No of Repos:</span> {{this.count}}</p>
+                  <a href="/{{this.username}}/repo" class="btn btn-primary btn-sm">All user repos</a>              
+                </div>
+            {{else}}
+             <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
+              <h5 class="card-title">All org</h5>
+              <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+              <p><span class="font-weight-bold">No of Orgs:</span> {{this.count}}</p>
+              <a href="/{{this.username}}/repo/org" class="btn btn-primary btn-sm">See all Orgs</a>              
+            </div>
+          {{/if}}
+         {{/each}}
+        </div>
       </div>
     </div>
   </div>
-{{/each}}
+</div>
+
+<div class="box">
+  <div class="heading">
+    <h5>Listening for issues on the follwing repos</h5>
+  </div>
+<div class="card" style="width: 20rem;">
+  <div class="card-header">
+    Active Hooks 
+  </div>
+  <ul class="list-group list-group-flush">
+    {{#each hooks }}
+      <li class="list-group-item">{{this.name}}
+        <form action="/deleteHook/{{this.name}}" id="{{this.id}}" method="POST">
+        <a href="#"><p onclick="document.getElementById({{this.id}}).submit(); return false;" class="text-danger">Remove Hook</p> 
+        </a>
+         <input type="hidden" name="_csrf" value="{{../csrfToken}}">
+        </form>
+      </li>
+    {{/each}}
+  </ul>
+</div>
+</div>
+
+<div role="alert" class="toast show" data-autohide="false" id="1">
+  <div class="toast-header" data-autohide="false">
+    <img src="..." class="rounded mr-2" alt="...">
+    <strong class="mr-auto">Bootstrap</strong>
+    <small>11 mins ago</small>
+    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+      <span aria-hidden="true" data-id="1">&times;</span>
+    </button>
+  </div>
+  <div class="toast-body">
+    Hello, world! This is a toast message.
+  </div>
+</div>
+
+<script src="/scripts/client.js"></script>
+
