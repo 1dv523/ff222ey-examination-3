@@ -161,9 +161,13 @@ webhookHandler.on('issues', function (repo, data) {
   const updated = obj.issue.updated_at
   obj.issue.created_at = moment(created).format('MMMM Do YYYY, h:mm a')
   obj.issue.updated_at = moment(updated).format('MMMM Do YYYY, h:mm a')
-  const socket = app.get(id)
-  if (socket) {
-    socket.emit('issues', obj)
+  const allClients = app.get(id)
+  if (allClients.length > 0) {
+    for (const jo of allClients) {
+      console.log(jo.id)
+      jo.emit('issues', obj)
+    }
+    console.log('I am here lol')
   }
 })
 
