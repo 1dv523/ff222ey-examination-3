@@ -109,6 +109,7 @@ app.use(csrfProtection, (req, res, next) => {
     // res.locals.flash = flash
     res.locals.loggedIn = true
     res.locals.navBar = req.user
+    res.locals.csrfToken = csurfToken
   }
 
   if (req.session.userId) {

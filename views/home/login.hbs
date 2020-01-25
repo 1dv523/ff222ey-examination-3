@@ -12,7 +12,12 @@
 						<div class="lead">
 							<span>Lorem ipsum dolor sit amet, id quo eruditi eloquentiam. Assum decore te sed. Elitr scripta ocurreret qui ad.</span>
 						</div>
-             <form action="/auth/github"><button type="submit" class="btn btn-primary btn-git"><i class="fab fa-github pr-1"></i> Login via Github</button></form>
+             <form action="/auth/github">
+             <button type="submit" class="btn btn-primary btn-git">
+               <i class="fab fa-github pr-1"></i> Login via Github
+               </button>
+                <input type="hidden" name="_csrf" value="{{csrfToken}}">
+               </form>
                         
 					 </div>
 				</div>

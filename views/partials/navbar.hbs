@@ -48,7 +48,11 @@
               <a class="dropdown-item" href="/{{navBar.username}}/repo/org">View Org</a>
               <a class="dropdown-item" href="/{{navBar.username}}/repo">View User Repo</a>
               <div class="dropdown-divider"></div>
-              <form method="POST" action="/logout"><div class="margin"><button type="submit" class="btn btn-danger margin btn-sm">Log Out</button></div></form>
+              <form method="POST" action="/logout"><div class="margin">
+                <button type="submit" class="btn btn-danger margin btn-sm">Log Out</button>
+                </div>
+                <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                </form>
             </div>
          </li>
         {{/if}}
