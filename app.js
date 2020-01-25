@@ -66,9 +66,7 @@ io
       // console.log(socket.request.session.passport.user)
       // allClients.push(socket.id)
       userId = userId.user.username
-      if (!allClients.includes({ socket, id: userId })) {
-        allClients.push({ socket, id: userId })
-      }
+      allClients.push({ socket, id: userId })
 
       // console.log(allClients)
       // if (allClients) {
