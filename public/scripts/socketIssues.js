@@ -11,21 +11,21 @@ const container = document.getElementById('container')
 let issueCounter = 0
 let token
 issueTemplate.className = 'child'
-template.innerHTML = `
-<div role="alert" aria-live="assertive" aria-atomic="true" class="toast show" data-autohide="false">
-<div class="toast-header">
-  <img src="..." class="rounded mr-2 img" alt="...">
-  <strong class="mr-auto headings">Bootstrap</strong>
-  <small>11 mins ago</small>
-  <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-    <span aria-hidden="true" onclick="document.getElementById({{this.id}}).remove(); return false;">&times;</span>
-  </button>
-</div>
-<div class="toast-body">
-  Hello, world! This is a toast message.
-</div>
-</div>
-`
+// template.innerHTML = `
+// <div role="alert" aria-live="assertive" aria-atomic="true" class="toast show" data-autohide="false">
+// <div class="toast-header">
+//   <img src="..." class="rounded mr-2 img" alt="...">
+//   <strong class="mr-auto headings">Bootstrap</strong>
+//   <small>11 mins ago</small>
+//   <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+//     <span aria-hidden="true" onclick="document.getElementById({{this.id}}).remove(); return false;">&times;</span>
+//   </button>
+// </div>
+// <div class="toast-body">
+//   Hello, world! This is a toast message.
+// </div>
+// </div>
+// `
 issueTemplate.innerHTML = `
   <div class="card" style="width: 32rem;">
   <div class="card-body">
@@ -51,30 +51,30 @@ issueTemplate.innerHTML = `
 console.log(issueTemplate)
 let counter = 0
 socket.on('issue_comment', function (data) {
-  if (data.token) {
-    token = data.token
-  }
-  console.log(data)
-  counter++
-  const alert = template.content.cloneNode(true)
-  const body = alert.querySelector('.toast-body')
-  const heading = alert.querySelector('.headings')
-  const img = alert.querySelector('.img')
-  img.setAttribute('src', data.sender.avatar_url)
-  notis.textContent = counter
-  if (data.action === 'deleted') {
-    body.textContent = `${data.sender.login} deleted an issue comment on ${data.repository.full_name}`
-    heading.textContent = 'Comment Deleted'
-  } else if (data.action === 'edited') {
-    body.textContent = `${data.sender.login} edited an issue comment on ${data.repository.full_name}`
-    heading.textContent = 'Comment Edited'
-  } else if (data.action === 'created') {
-    heading.textContent = 'New Comment'
-    body.textContent = `${data.sender.login} created a new comment on ${data.repository.full_name}`
-  } else {
+  // if (data.token) {
+  //   token = data.token
+  // }
+  // console.log(data)
+  // counter++
+  // const alert = template.content.cloneNode(true)
+  // const body = alert.querySelector('.toast-body')
+  // const heading = alert.querySelector('.headings')
+  // const img = alert.querySelector('.img')
+  // img.setAttribute('src', data.sender.avatar_url)
+  // notis.textContent = counter
+  // if (data.action === 'deleted') {
+  //   body.textContent = `${data.sender.login} deleted an issue comment on ${data.repository.full_name}`
+  //   heading.textContent = 'Comment Deleted'
+  // } else if (data.action === 'edited') {
+  //   body.textContent = `${data.sender.login} edited an issue comment on ${data.repository.full_name}`
+  //   heading.textContent = 'Comment Edited'
+  // } else if (data.action === 'created') {
+  //   heading.textContent = 'New Comment'
+  //   body.textContent = `${data.sender.login} created a new comment on ${data.repository.full_name}`
+  // } else {
 
-  }
-  notisBar.append(alert)
+  // }
+  // notisBar.append(alert)
 })
 
 socket.on('issues', function (data) {
@@ -84,7 +84,7 @@ socket.on('issues', function (data) {
   }
   counter++
   issueCounter++
-  const alert = template.content.cloneNode(true)
+  // const alert = template.content.cloneNode(true)
   const newIssue = issueTemplate.cloneNode(true)
   newIssue.setAttribute('data-issue', data.issue.id)
   const title = newIssue.querySelector('.card-title')
@@ -101,40 +101,40 @@ socket.on('issues', function (data) {
   console.log(form)
   console.log(p)
 
-  const body = alert.querySelector('.toast-body')
-  const heading = alert.querySelector('.headings')
-  const img = alert.querySelector('.img')
-  img.setAttribute('src', data.sender.avatar_url)
-  notis.textContent = counter
+  // const body = alert.querySelector('.toast-body')
+  // const heading = alert.querySelector('.headings')
+  // const img = alert.querySelector('.img')
+  // img.setAttribute('src', data.sender.avatar_url)
+  // notis.textContent = counter
 
   if (data.action === 'edited') {
-    body.textContent = `${data.sender.login} edited an issue name on ${data.repository.full_name}`
-    heading.textContent = 'Issue edited'
+    // body.textContent = `${data.sender.login} edited an issue name on ${data.repository.full_name}`
+    // heading.textContent = 'Issue edited'
     const number = data.issue.id
     const elements = document.getElementsByClassName('child')
     const node = getElement(elements, number)
     node.remove()
     issueCounter--
-    updateScreen(body, data, title, url, created, updated, text, comments, container, newIssue, heading, user, a, form)
+    updateScreen(data, title, url, created, updated, text, comments, container, newIssue, user, a, form)
   } else if (data.action === 'closed') {
-    body.textContent = `${data.sender.login} closed an issue on ${data.repository.full_name}`
-    heading.textContent = 'Issue closed'
+    // body.textContent = `${data.sender.login} closed an issue on ${data.repository.full_name}`
+    // heading.textContent = 'Issue closed'
     const number = data.issue.id
     const elements = document.getElementsByClassName('child')
     const node = getElement(elements, number)
     node.remove()
     issueCounter--
   } else if (data.action === 'reopened') {
-    body.textContent = `${data.sender.login} reopened an issue on ${data.repository.full_name}`
-    heading.textContent = 'Issue reopened'
+    // body.textContent = `${data.sender.login} reopened an issue on ${data.repository.full_name}`
+    // heading.textContent = 'Issue reopened'
 
-    updateScreen(body, data, title, url, created, updated, text, comments, container, newIssue, heading, user, a, form)
+    updateScreen(data, title, url, created, updated, text, comments, container, newIssue, user, a, form)
   } else if (data.action === 'opened') {
-    updateScreen(body, data, title, url, created, updated, text, comments, container, newIssue, heading, user, a, form)
+    updateScreen(data, title, url, created, updated, text, comments, container, newIssue, user, a, form)
   } else {
 
   }
-  notisBar.append(alert)
+  // notisBar.append(alert)
 })
 
 function getElement (elements, number) {
@@ -150,9 +150,9 @@ function getElement (elements, number) {
   return node
 }
 
-function updateScreen (body, data, title, url, created, updated, text, comments, container, newIssue, heading, user, a, form) {
-  body.textContent = `${data.sender.login} created a new issue on ${data.repository.full_name}`
-  heading.textContent = 'New issue'
+function updateScreen (data, title, url, created, updated, text, comments, container, newIssue, user, a, form) {
+  // body.textContent = `${data.sender.login} created a new issue on ${data.repository.full_name}`
+  // heading.textContent = 'New issue'
   title.textContent = `${data.issue.title}`
   user.textContent = `${data.issue.user.login}`
   url.textContent = `${data.repository.html_url}`

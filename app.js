@@ -63,10 +63,7 @@ io
     let userId = socket.request.session.passport
     if (userId) {
       userId = userId.user.username
-      if (socket.connected) {
-        console.log(socket.connected)
-        allClients.push({ socket, id: userId })
-      }
+      allClients.push({ socket, id: userId })
       socket.request.session.passport.user.allClients = allClients
       console.log(allClients.length)
       socket.request.session.passport.user.allClients = allClients
@@ -159,7 +156,8 @@ webhookHandler.on('issues', function (repo, data) {
   const updated = obj.issue.updated_at
   obj.issue.created_at = moment(created).format('MMMM Do YYYY, h:mm a')
   obj.issue.updated_at = moment(updated).format('MMMM Do YYYY, h:mm a')
-  const arr = allClients.filter(e => e.id === id && arr.socket.connected)
+  console.log(allClients)
+  const arr = allClients.filter(e => e.id === id)
   console.log(arr)
   // const allClients = app.get(id)
   if (arr.length > 0) {
@@ -167,6 +165,7 @@ webhookHandler.on('issues', function (repo, data) {
       const socket = jo.socket
       console.log(jo.id)
       socket.emit('issues', obj)
+      console.log('sent')
     }
     console.log('I am here lol')
   }
