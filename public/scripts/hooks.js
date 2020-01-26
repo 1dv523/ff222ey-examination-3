@@ -1,7 +1,5 @@
-// import { formatWithOptions } from "util";
-import { socket } from './client.js'
 
-// const sockets = window.io()
+import { socket } from './client.js'
 
 socket.emit('token')
 let token
@@ -12,6 +10,7 @@ socket.on('token', function (data) {
 })
 
 window.$('.toggle').change(function (e) {
+  console.log('i am')
   const lol = e.target
   const name = lol.getAttribute('data-name')
   const type = lol.getAttribute('data-type')

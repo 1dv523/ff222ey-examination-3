@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
     "devstart": "nodemon --inspect ./app.js",
-    "lint": "standard | snazzy || exit 0"
+    "lint": "standard | snazzy || exit 0",
+    "build": "webpack",
+    "copy:jquery": "cpy 'node_modules/jquery/dist/jquery.min.js' ./dist/scripts/"
   },
   "repository": {
     "type": "git",
@@ -29,6 +31,7 @@
     "express-hbs": "^2.2.0",
     "express-session": "^1.17.0",
     "helmet": "^3.21.2",
+    "jquery": "^3.4.1",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "mongoose": "^5.8.6",
@@ -44,7 +47,9 @@
   "devDependencies": {
     "nodemon": "*",
     "snazzy": "*",
-    "standard": "*"
+    "standard": "*",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
   },
   "nodemonConfig": {
     "ext": "js,json,hbs,html,css"
