@@ -1,10 +1,10 @@
 
-import { socket } from './client.js'
+// import { socket } from './client.js'
 
-socket.emit('token')
+window.socket.emit('token')
 let token
 
-socket.on('token', function (data) {
+window.socket.on('token', function (data) {
   token = data
   console.log(data)
 })

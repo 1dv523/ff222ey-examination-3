@@ -2,7 +2,7 @@
 
 console.log('hello worldss')
 
-export const socket = window.io()
+window.socket = window.io()
 const notis = document.getElementById('notis')
 const notisBar = document.getElementById('notisBar')
 const template = document.createElement('div')
@@ -32,7 +32,7 @@ window.$('.close').click(function (e) {
   // console.log('the oarent is ', parent)
   // parent.remove()
 })
-socket.on('issue_comment', function (data) {
+window.socket.on('issue_comment', function (data) {
   console.log(data)
   counter++
   id++
@@ -60,7 +60,7 @@ socket.on('issue_comment', function (data) {
   notisBar.append(alert)
 })
 
-socket.on('issues', function (data) {
+window.socket.on('issues', function (data) {
   console.log(data)
   counter++
   const alert = template.cloneNode(true)
@@ -96,7 +96,7 @@ function deleteThis (e) {
 }
 
 window.addEventListener('beforeunload', function (e) {
-  socket.disconnect()
+  window.socket.disconnect()
 })
 
 /*
