@@ -1,8 +1,7 @@
 'use strict'
 import { doNotify } from './notis.js'
-console.log('hello worldss')
-
 export const socket = window.io()
+
 const sessionStorageName = 'theIssuerNotis'
 let allNotis = window.sessionStorage.getItem(sessionStorageName)
 const notis = document.getElementById('notis')
@@ -28,15 +27,12 @@ let id = 0
 
 if (allNotis) {
   allNotis = JSON.parse(allNotis)
-  console.log(' ia ma hre')
   if (allNotis.length > 0) {
-    console.log(allNotis)
     displayNotis(allNotis)
   }
 }
 
 socket.on('issue_comment', (data) => {
-  console.log(data)
   allNotis = window.sessionStorage.getItem(sessionStorageName)
   if (allNotis) {
     allNotis = JSON.parse(allNotis)
@@ -72,7 +68,6 @@ socket.on('issue_comment', (data) => {
   img.setAttribute('src', data.sender.avatar_url)
   notis.textContent = counter
   if (data.action === 'deleted') {
-    console.log(data.sender.login)
     span.textContent = `${data.sender.login} `
     body.append(span)
     ptag.textContent = ' deleted a comment on '
@@ -107,7 +102,6 @@ socket.on('issue_comment', (data) => {
   mess.repo = data.repository.full_name
   mess.id = id
   mess.url = url
-  console.log(allNotis)
   if (document.hidden) {
     doNotify(heading.textContent, `${span.textContent}${ptag.textContent}${span2.textContent}`, data.sender.avatar_url, url)
   }
@@ -120,7 +114,6 @@ socket.on('issue_comment', (data) => {
 })
 
 socket.on('issues', function (data) {
-  console.log(data)
   allNotis = window.sessionStorage.getItem(sessionStorageName)
   allNotis = JSON.parse(allNotis)
   const mess = {}
@@ -196,7 +189,6 @@ socket.on('issues', function (data) {
   mess.notisType = 'issue'
   mess.url = url
 
-
   allNotis.push(mess)
   allNotis = JSON.stringify(allNotis)
   window.sessionStorage.setItem(sessionStorageName, allNotis)
@@ -211,7 +203,6 @@ socket.on('issues', function (data) {
 
 function deleteThis (e) {
   let id = e.target.getAttribute('data-id')
-  console.log(id)
   const div = document.getElementById(id)
   id = parseInt(id, 10)
   remove(id)
@@ -324,7 +315,6 @@ window.addEventListener('beforeunload', function (e) {
 export function remove (id) {
   allNotis = window.sessionStorage.getItem(sessionStorageName)
   allNotis = JSON.parse(allNotis)
-  console.log(allNotis)
   allNotis = allNotis.filter(e => e.id !== id)
   allNotis = JSON.stringify(allNotis)
   window.sessionStorage.setItem(sessionStorageName, allNotis)

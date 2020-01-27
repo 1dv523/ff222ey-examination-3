@@ -195,11 +195,22 @@ homeController.toggleHook = async (req, res, next) => {
     }
     if (status) {
       if (status.length > 0) {
-        for (const hook of status) {
+        const hook = status.find(e => e.config.url.includes(process.env.url))
+        if (hook) {
           const id = hook.id
           await ghrepo.deleteHookAsync(id)
+          hooks = hooks.filter(hook => { return hook.name !== repo })
+        } else {
+          await ghrepo.hookAsync({
+            name: 'web',
+            active: true,
+            events: ['issues', 'issue_comment'],
+            config: {
+              url: process.env.url + '/hooks'
+            }
+          })
+          hooks.push({ name: repo })
         }
-        hooks = hooks.filter(hook => { return hook.name !== repo })
         // console.log(hooks)
       } else {
         await ghrepo.hookAsync({

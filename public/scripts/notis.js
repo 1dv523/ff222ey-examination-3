@@ -9,7 +9,7 @@ if ('Notification' in window) {
       .then(function (result) {
         console.log(result) // granted || denied
         if (window.Notification.permission === 'granted') {
-          doNotify()
+          // doNotify()
         }
       })
       .catch((err) => {
@@ -30,9 +30,6 @@ export function doNotify (titl, body, icon, url) {
     vibrate: [100, 200, 100]
   }
   const n = new window.Notification(title, options)
-  n.addEventListener('show', function (ev) {
-    console.log('SHOW', ev.currentTarget.data)
-  })
   n.addEventListener('click', function (ev) {
     console.log('clicked')
     window.focus()

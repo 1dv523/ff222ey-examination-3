@@ -1,7 +1,4 @@
 const socket = window.io()
-
-console.log('hello commnents')
-
 const ul = document.querySelector('#comments-list')
 const liAuthor = document.createElement('li')
 const li = document.createElement('li')
@@ -55,7 +52,6 @@ li.innerHTML = `
 `
 
 socket.on('issue_comment', function (data) {
-  console.log(data)
   if (data.token) {
     token = data.token
   }
@@ -97,7 +93,6 @@ socket.on('issue_comment', function (data) {
 })
 
 socket.on('issues', function (data) {
-  console.log(data)
   if (data.token) {
     token = data.token
   }
@@ -107,7 +102,6 @@ function getElement (elements, number) {
   let node
   for (const item of elements) {
     let num = item.getAttribute('data-comment')
-    console.log(num)
     num = parseInt(num, 10)
     if (num === number) {
       node = item
