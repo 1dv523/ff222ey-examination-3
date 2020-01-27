@@ -1,5 +1,5 @@
 'use strict'
-
+import { doNotify } from './notis.js'
 console.log('hello worldss')
 
 export const socket = window.io()
@@ -18,8 +18,9 @@ template.innerHTML = `
   <span aria-hidden="true" class="del" >&times;</span>
 </button>
 </div>
-<div class="toast-body">
-</div>
+<a href="#">
+  <div class="toast-body"></div>
+</a>
 </div>
 `
 let counter = 0
@@ -51,6 +52,17 @@ socket.on('issue_comment', (data) => {
   const body = alert.querySelector('.toast-body')
   const heading = alert.querySelector('.headings')
   const span = document.createElement('span')
+  const aTag = alert.querySelector('a')
+  alert.style.order = counter * -1
+  let url
+  aTag.setAttribute('data-id', id)
+  if (data.organization) {
+    url = `/${data.sender.login}/repo/${data.repository.owner.login}/issues/${data.issue.number}/${data.repository.name}/comments`
+    aTag.setAttribute('href', `/${data.sender.login}/repo/${data.repository.owner.login}/issues/${data.issue.number}/${data.repository.name}/comments`)
+  } else {
+    url = `/${data.sender.login}/repo/issues/${data.issue.number}/${data.repository.name}/comments`
+    aTag.setAttribute('href', `/${data.sender.login}/repo/issues/${data.issue.number}/${data.repository.name}/comments`)
+  }
   const ptag = document.createElement('label')
   span.className = 'font-weight-bold'
   const span2 = span.cloneNode(true)
@@ -94,9 +106,13 @@ socket.on('issue_comment', (data) => {
   mess.img = data.sender.avatar_url
   mess.repo = data.repository.full_name
   mess.id = id
+  mess.url = url
   console.log(allNotis)
-
+  if (document.hidden) {
+    doNotify(heading.textContent, `${span.textContent}${ptag.textContent}${span2.textContent}`, data.sender.avatar_url, url)
+  }
   window.$(del).click(deleteThis)
+  window.$(aTag).click(deleteThis)
   notisBar.append(alert)
   allNotis.push(mess)
   allNotis = JSON.stringify(allNotis)
@@ -116,6 +132,17 @@ socket.on('issues', function (data) {
   const heading = alert.querySelector('.headings')
   const img = alert.querySelector('.img')
   const del = alert.querySelector('.del')
+  const aTag = alert.querySelector('a')
+  alert.style.order = counter * -1
+  let url
+  aTag.setAttribute('data-id', id)
+  if (data.organization) {
+    url = `/${data.sender.login}/repo/${data.organization.name}/issues/${data.repository.name}/`
+    aTag.setAttribute('href', `/${data.sender.login}/repo/${data.organization.name}/issues/${data.repository.name}/`)
+  } else {
+    url = `/${data.sender.login}/repo/${data.repository.owner.login}/issues/${data.repository.name}`
+    aTag.setAttribute('href', `/${data.sender.login}/repo/${data.repository.owner.login}/issues/${data.repository.name}`)
+  }
   const span = document.createElement('span')
   const ptag = document.createElement('label')
   span.className = 'font-weight-bold'
@@ -167,6 +194,7 @@ socket.on('issues', function (data) {
   mess.id = id
   mess.repo = data.repository.full_name
   mess.notisType = 'issue'
+  mess.url = url
 
 
   allNotis.push(mess)
@@ -174,7 +202,11 @@ socket.on('issues', function (data) {
   window.sessionStorage.setItem(sessionStorageName, allNotis)
 
   window.$(del).click(deleteThis)
+  window.$(aTag).click(deleteThis)
   notisBar.append(alert)
+  if (document.hidden) {
+    doNotify(heading.textContent, `${span.textContent}${ptag.textContent}${span2.textContent}`, data.sender.avatar_url, url, id)
+  }
 })
 
 function deleteThis (e) {
@@ -182,22 +214,12 @@ function deleteThis (e) {
   console.log(id)
   const div = document.getElementById(id)
   id = parseInt(id, 10)
-  allNotis = window.sessionStorage.getItem(sessionStorageName)
-  allNotis = JSON.parse(allNotis)
-  console.log(allNotis)
-  allNotis = allNotis.filter(e => e.id !== id)
-  allNotis = JSON.stringify(allNotis)
-  window.sessionStorage.setItem(sessionStorageName, allNotis)
+  remove(id)
   div.remove()
-  counter--
-  if (counter === 0) {
-    notis.textContent = ''
-  } else {
-    notis.textContent = counter
-  }
 }
 
 function displayNotis (arr) {
+  counter = arr.length
   arr.forEach(element => {
     const alert = template.cloneNode(true)
     alert.className += ' space'
@@ -210,7 +232,8 @@ function displayNotis (arr) {
     alert.setAttribute('id', element.id)
     span.className = 'font-weight-bold'
     const span2 = span.cloneNode(true)
-    counter = arr.length
+    const aTag = alert.querySelector('a')
+    aTag.setAttribute('href', element.url)
     if (counter === 0) {
       notis.textContent = ''
     } else {
@@ -298,44 +321,17 @@ window.addEventListener('beforeunload', function (e) {
   socket.disconnect()
 })
 
-/*
-if ('Notification' in window) {
-  if (window.Notification.permission === 'granted') {
-    // If it's okay let's create a notification
-    doNotify()
+export function remove (id) {
+  allNotis = window.sessionStorage.getItem(sessionStorageName)
+  allNotis = JSON.parse(allNotis)
+  console.log(allNotis)
+  allNotis = allNotis.filter(e => e.id !== id)
+  allNotis = JSON.stringify(allNotis)
+  window.sessionStorage.setItem(sessionStorageName, allNotis)
+  counter--
+  if (counter === 0) {
+    notis.textContent = ''
   } else {
-    // notification == denied
-    window.Notification.requestPermission()
-      .then(function (result) {
-        console.log(result) // granted || denied
-        if (window.Notification.permission === 'granted') {
-          doNotify()
-        }
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    notis.textContent = counter
   }
 }
-
-function doNotify () {
-  const title = 'The Title'
-  const t = Date.now() + 120000 // 2 mins in future
-  const options = {
-    body: 'Hello from JavaScript!',
-    data: { prop1: 123, prop2: 'Steve' },
-    lang: 'en-CA',
-    icon: './img/calendar-lg.png',
-    timestamp: t,
-    vibrate: [100, 200, 100]
-  }
-  const n = new window.Notification(title, options)
-  n.addEventListener('show', function (ev) {
-    console.log('SHOW', ev.currentTarget.data)
-  })
-  n.addEventListener('close', function (ev) {
-    console.log('CLOSE', ev.currentTarget.body)
-  })
-  setTimeout(n.close.bind(n), 3000) // close notification after 3 seconds
-}
-*/
