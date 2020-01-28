@@ -130,8 +130,8 @@ socket.on('issues', function (data) {
   let url
   aTag.setAttribute('data-id', id)
   if (data.organization) {
-    url = `/${data.sender.login}/repo/${data.organization.name}/issues/${data.repository.name}/`
-    aTag.setAttribute('href', `/${data.sender.login}/repo/${data.organization.name}/issues/${data.repository.name}/`)
+    url = `/${data.sender.login}/repo/${data.repository.owner.login}/issues/${data.repository.name}/`
+    aTag.setAttribute('href', `/${data.sender.login}/repo/${data.repository.owner.login}/issues/${data.repository.name}/`)
   } else {
     url = `/${data.sender.login}/repo/${data.repository.owner.login}/issues/${data.repository.name}`
     aTag.setAttribute('href', `/${data.sender.login}/repo/${data.repository.owner.login}/issues/${data.repository.name}`)
