@@ -1,0 +1,17 @@
+#!/bin/sh
+
+git --work-tree=/var/www/assign3 --git-dir=/var/repo/site.git checkout -f
+cd /var/www/assign3
+npm install --production
+SERVICE="node /var/www/a"
+if pgrep -x "$SERVICE" >/dev/null
+then
+    echo "$SERVICE restarted"
+    sudo pm2 restart app.js
+else
+    echo "$SERVICE up and running"
+    sudo pm2 start app.js
+    # uncomment to start nginx if stopped
+    # systemctl start nginx
+    # mail  
+fi
