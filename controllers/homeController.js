@@ -1,7 +1,6 @@
 'use strict'
 const github = require('octonode')
 const _ = require('lodash')
-const url  = require('url')
 
 let client
 const homeController = {}
@@ -60,7 +59,6 @@ homeController.checkRights = async (req, res, next) => {
 }
 
 homeController.closeIssue = async (req, res, next) => {
-  console.log('here boi')
   const token = req.user.accessToken
   const client = github.client(token)
 
@@ -79,7 +77,6 @@ homeController.closeIssue = async (req, res, next) => {
   }
   const backURL = req.header('Referer') || '/'
   res.redirect(backURL)
-  console.log(status)
 }
 
 homeController.createComment = async (req, res, next) => {
@@ -89,13 +86,11 @@ homeController.createComment = async (req, res, next) => {
   const name = req.params.id
   const repo = req.params.id2
   const comment = req.body.comment
-  console.log(comment)
 
   const ghissue = client.issue(`${name}/${repo}`, num)
 
   try {
     const result = await ghissue.createCommentAsync({ body: comment })
-    console.log(result)
     let status = result[1].status
     status = status.split(' ')
     status = status[0]
@@ -113,15 +108,12 @@ homeController.createComment = async (req, res, next) => {
 }
 
 homeController.deleteComment = async (req, res, next) => {
-  console.log('i am here boi')
   const token = req.user.accessToken
   const client = github.client(token)
   const num = req.params.num
   const name = req.params.id
   const repo = req.params.id2
   const ghissue = client.issue(`${name}/${repo}`, num)
-
-  console.log(req.params.num2)
 
   try {
     const result = await ghissue.deleteCommentAsync(req.params.num2)
@@ -154,30 +146,6 @@ homeController.deleteHook = async (req, res, next) => {
   hooks = hooks.filter(hook => { return hook.name !== repo })
   req.user.hooks = hooks
   res.redirect('/')
-
-  // ghrepo.hooks(async function (err, status, body, headers) {
-  //   if (err) {
-  //     // console.log(err)
-  //     if (err.statusCode === 404) {
-  //       err.status = 404
-  //       return next(err)
-  //     } else {
-  //       err.status = 500
-  //       return next(err)
-  //     }
-  //   }
-  //   if (status) {
-  //     if (status.length > 0) {
-  //       for (const hook of status) {
-  //         const id = hook.id
-  //         await ghrepo.deleteHookAsync(id)
-  //       }
-  //       hooks = hooks.filter(hook => { return hook.name !== repo })
-  //     }
-  //   }
-  //   req.user.hooks = hooks
-  //   res.redirect('/')
-  // })
 }
 
 homeController.toggleHook = async (req, res, next) => {
@@ -186,12 +154,11 @@ homeController.toggleHook = async (req, res, next) => {
   const token = req.user.accessToken
   client = github.client(token)
   const name = repo.substring(0, repo.indexOf('/'))
-  console.log(repo)
   const ghrepo = client.repo(repo)
   let hooks = req.user.hooks
   ghrepo.hooks(async function (err, status, body, headers) {
     if (err) {
-      // console.log(err)
+      console.log(err)
     }
     if (status) {
       if (status.length > 0) {
@@ -211,7 +178,6 @@ homeController.toggleHook = async (req, res, next) => {
           })
           hooks.push({ name: repo })
         }
-        // console.log(hooks)
       } else {
         await ghrepo.hookAsync({
           name: 'web',
@@ -267,7 +233,6 @@ homeController.profile = async (req, res, next) => {
       if (result[0] === 200) {
         const lol = []
         result[1].forEach(element => {
-        // console.log(element)
           const filtered = _.pick(element, 'name', 'full_name', 'html_url', 'hooks_url', 'id')
           lol.push(filtered)
           if (!allRepos.includes(element.full_name)) {
@@ -277,7 +242,7 @@ homeController.profile = async (req, res, next) => {
 
         orgRepos[i].repos = lol
       } else {
-        err.status = 500 //TODO CHECK FOR A BETTER CODE
+        err.status = 500
         next(500)
       }
     })
@@ -291,16 +256,14 @@ homeController.profile = async (req, res, next) => {
       ghrepo.hooks(function (err, status, body, headers) {
         counter++
         if (err) {
-          // console.log(err)
+          console.log(err)
         }
         if (status) {
-          console.log(status)
           const hook = status.find(e => e.config.url.includes(process.env.url))
           availableHooks.push({ name: repo })
           if (hook) {
             hooks.push({ name: repo, id: hook.id })
           }
-          console.log(hook)
         }
         if (counter === allRepos.length) {
           resolve()

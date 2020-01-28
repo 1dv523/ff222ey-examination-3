@@ -38,13 +38,10 @@
                 {{else}}
                  <input type="checkbox" class="toggle" unchecked data-toggle="toggle" data-type="{{../org}}" data-name="{{this.name}}" data-on="Hook on" data-off="Hook off" data-onstyle="success" data-offstyle="danger" data-size="small" data-style="ios">
             {{/if}}
-                {{!-- <input type="checkbox" unchecked data-toggle="toggle" data-on="Hook on" data-off="Hook off" data-onstyle="success" data-offstyle="danger" data-size="small" data-style="ios"> --}}
               {{else}}
                 <input type="checkbox"class="toggle" unchecked disabled="true" data-toggle="toggle" data-type="{{../org}}" data-off="N/A"data-onstyle="danger" data-offstyle="info" data-size="small" data-style="ios">
               {{/if}}
         {{/if}}
-       {{!-- <input type="checkbox" checked data-toggle="toggle" data-on="Hook on" data-off="Hook off" data-onstyle="success" data-offstyle="danger" data-size="small" data-style="ios">
-       <input type="checkbox" unchecked disabled="true" data-toggle="toggle" data-off="NA"data-onstyle="danger" data-offstyle="info" data-size="small" data-style="ios"> --}}
     </div>
     <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
       {{#if ../org }}
@@ -58,19 +55,3 @@
 {{/each}}
 
 <script src="/scripts/bundle.js"></script>
-{{!-- <script src="/scripts/hooks.js" ></script> --}}
-
-
-
-
-{{!-- <script>
-     var socket = io(); // your initialization code here.
-     console.log('i am here lol')
-     socket.connect('http://localhost:4567')
-
-      socket.on('message', function (data) {
-    console.log('message arrivede')
-    console.log(data)
-  // p.textContent = data.message
- })
-</script> --}}

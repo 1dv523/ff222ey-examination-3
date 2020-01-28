@@ -13,7 +13,6 @@ repoController.index = async (req, res, next) => {
   const img = req.user.avatar_url
   const hooks = req.user.availableHooks
   const hooksOn = req.user.hooks
-  console.log('repos', repos)
 
   repos.forEach(repo => {
     delete repo.hookPossible
@@ -23,23 +22,16 @@ repoController.index = async (req, res, next) => {
   repos.forEach(repo => {
     const lol = hooks.find(o => o.name === repo.name)
     const lol2 = hooksOn.find(o => o.name === repo.name)
-    console.log(lol2)
     if (lol) {
       repo.hookPossible = true
-      // console.log(repo)
     }
     if (lol2) {
       repo.hook = true
-      // console.log(repo)
     }
   })
   let flash = req.flash('info')
   flash = flash[0]
   res.render('home/home', { repos, img, flash })
-}
-
-repoController.user = async (req, res, next) => {
-  
 }
 
 repoController.ensureAuthenticated = (req, res, next) => {
@@ -154,7 +146,6 @@ repoController.issues = (req, res, next) => {
     req.user.issues = issues
     let flash = req.flash('info')
     flash = flash[0]
-    console.log(req.user.csrfToken)
     res.render('home/issues', { issues, org, repo, flash, csrfToken: req.user.csrfToken })
   }) // array of
 }
@@ -195,7 +186,6 @@ repoController.orgRepo = async (req, res, next) => {
   let flash = req.flash('info')
   flash = flash[0]
   res.render('home/home', { repos, img: org.img, org: org.name, flash })
-  // console.log(org)
 }
 
 repoController.org = async (req, res, next) => {
@@ -203,7 +193,6 @@ repoController.org = async (req, res, next) => {
   const user = {}
   user.name = req.user.username
   res.locals.user = user
-  // console.log(org)
   let flash = req.flash('info')
   flash = flash[0]
   res.render('profile/orgs', { org, flash })

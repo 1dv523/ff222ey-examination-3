@@ -5,7 +5,6 @@ const csrfProtection = csrf({ cookie: true })
 const router = express.Router()
 
 router.get('/repo', controller.ensureAuthenticated, controller.index)
-router.get('/repo/user', controller.ensureAuthenticated, controller.user)
 router.get('/repo/org', controller.ensureAuthenticated, controller.org)
 router.get('/repo/:id/issues/:rep', csrfProtection, controller.ensureAuthenticated, controller.orgIssues, controller.issues)
 router.get('/repo/issues/:rep', csrfProtection, controller.ensureAuthenticated, controller.userIssues, controller.issues)
