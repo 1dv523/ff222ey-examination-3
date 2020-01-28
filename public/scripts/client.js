@@ -328,6 +328,7 @@ function displayNotis (arr) {
       heading.textContent = 'Issue closed'
     }
     window.$(del).click(deleteThis)
+    window.$(aTag).click(deleteThis)
     notisBar.append(alert)
   })
 }
