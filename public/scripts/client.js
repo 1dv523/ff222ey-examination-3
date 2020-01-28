@@ -3,7 +3,9 @@ import { doNotify } from './notis.js'
 export const socket = window.io()
 
 const sessionStorageName = 'theIssuerNotis'
+const sessionStorageName2 = 'theIssuerId'
 let allNotis = window.sessionStorage.getItem(sessionStorageName)
+let ids = window.sessionStorage.getItem(sessionStorageName2)
 const notis = document.getElementById('notis')
 const notisBar = document.getElementById('notisBar')
 const template = document.createElement('div')
@@ -23,13 +25,18 @@ template.innerHTML = `
 </div>
 `
 let counter = 0
-let id = 0
 
 if (allNotis) {
   allNotis = JSON.parse(allNotis)
   if (allNotis.length > 0) {
     displayNotis(allNotis)
   }
+}
+
+if (ids) {
+  ids = parseInt(ids, 10)
+} else {
+  ids = 0
 }
 
 socket.on('issue_comment', (data) => {
@@ -41,17 +48,17 @@ socket.on('issue_comment', (data) => {
   }
   const mess = {}
   counter++
-  id++
+  ids++
   const alert = template.cloneNode(true)
   alert.className += ' space'
-  alert.setAttribute('id', id)
+  alert.setAttribute('id', ids)
   const body = alert.querySelector('.toast-body')
   const heading = alert.querySelector('.headings')
   const span = document.createElement('span')
   const aTag = alert.querySelector('a')
   alert.style.order = counter * -1
   let url
-  aTag.setAttribute('data-id', id)
+  aTag.setAttribute('data-id', ids)
   if (data.organization) {
     url = `/${data.sender.login}/repo/${data.repository.owner.login}/issues/${data.issue.number}/${data.repository.name}/comments`
     aTag.setAttribute('href', `/${data.sender.login}/repo/${data.repository.owner.login}/issues/${data.issue.number}/${data.repository.name}/comments`)
@@ -64,7 +71,7 @@ socket.on('issue_comment', (data) => {
   const span2 = span.cloneNode(true)
   const img = alert.querySelector('.img')
   const del = alert.querySelector('.del')
-  del.setAttribute('data-id', id)
+  del.setAttribute('data-id', ids)
   img.setAttribute('src', data.sender.avatar_url)
   notis.textContent = counter
   if (data.action === 'deleted') {
@@ -100,7 +107,7 @@ socket.on('issue_comment', (data) => {
   mess.body = ptag.textContent
   mess.img = data.sender.avatar_url
   mess.repo = data.repository.full_name
-  mess.id = id
+  mess.id = ids
   mess.url = url
   if (document.hidden) {
     doNotify(heading.textContent, `${span.textContent}${ptag.textContent}${span2.textContent}`, data.sender.avatar_url, url)
@@ -111,6 +118,7 @@ socket.on('issue_comment', (data) => {
   allNotis.push(mess)
   allNotis = JSON.stringify(allNotis)
   window.sessionStorage.setItem(sessionStorageName, allNotis)
+  window.sessionStorage.setItem(sessionStorageName2, ids)
 })
 
 socket.on('issues', function (data) {
@@ -118,7 +126,7 @@ socket.on('issues', function (data) {
   allNotis = JSON.parse(allNotis)
   const mess = {}
   counter++
-  id++
+  ids++
   const alert = template.cloneNode(true)
   alert.className += ' space'
   const body = alert.querySelector('.toast-body')
@@ -128,7 +136,7 @@ socket.on('issues', function (data) {
   const aTag = alert.querySelector('a')
   alert.style.order = counter * -1
   let url
-  aTag.setAttribute('data-id', id)
+  aTag.setAttribute('data-id', ids)
   if (data.organization) {
     url = `/${data.sender.login}/repo/${data.repository.owner.login}/issues/${data.repository.name}/`
     aTag.setAttribute('href', `/${data.sender.login}/repo/${data.repository.owner.login}/issues/${data.repository.name}/`)
@@ -140,7 +148,7 @@ socket.on('issues', function (data) {
   const ptag = document.createElement('label')
   span.className = 'font-weight-bold'
   const span2 = span.cloneNode(true)
-  del.setAttribute('data-id', id)
+  del.setAttribute('data-id', ids)
   img.setAttribute('src', data.sender.avatar_url)
   notis.textContent = counter
 
@@ -184,7 +192,7 @@ socket.on('issues', function (data) {
   mess.heading = heading.textContent
   mess.body = ptag.textContent
   mess.img = data.sender.avatar_url
-  mess.id = id
+  mess.id = ids
   mess.repo = data.repository.full_name
   mess.notisType = 'issue'
   mess.url = url
@@ -192,6 +200,7 @@ socket.on('issues', function (data) {
   allNotis.push(mess)
   allNotis = JSON.stringify(allNotis)
   window.sessionStorage.setItem(sessionStorageName, allNotis)
+  window.sessionStorage.setItem(sessionStorageName2, id)
 
   window.$(del).click(deleteThis)
   window.$(aTag).click(deleteThis)
@@ -317,8 +326,10 @@ export function remove (id) {
   allNotis = JSON.parse(allNotis)
   allNotis = allNotis.filter(e => e.id !== id)
   allNotis = JSON.stringify(allNotis)
+  ids--
   window.sessionStorage.setItem(sessionStorageName, allNotis)
-  counter--
+  window.sessionStorage.setItem(sessionStorageName2, ids)
+  counter-- // chekc
   if (counter === 0) {
     notis.textContent = ''
   } else {
