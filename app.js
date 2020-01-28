@@ -75,7 +75,7 @@ io
   })
   .on('connection', function (socket) {
     let userId = socket.request.session.passport
-    if (userId) {
+    if (userId && userId.user) {
       userId = userId.user.username
       allClients.push({ socket, id: userId })
       socket.request.session.passport.user.allClients = allClients
