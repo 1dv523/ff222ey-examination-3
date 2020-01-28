@@ -1,4 +1,4 @@
-const socket = window.io()
+import { socket } from './client.js'
 const ul = document.querySelector('#comments-list')
 const liAuthor = document.createElement('li')
 const li = document.createElement('li')

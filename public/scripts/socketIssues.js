@@ -1,6 +1,6 @@
 'use strict'
 
-const socket = window.io()
+import { socket } from './client.js'
 const issueTemplate = document.createElement('div')
 const container = document.getElementById('container')
 let issueCounter = 0
