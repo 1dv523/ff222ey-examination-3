@@ -1,4 +1,4 @@
-import { remove } from './client.js'
+import { deleteThat } from './client.js'
 if ('Notification' in window) {
   if (window.Notification.permission === 'granted') {
     // If it's okay let's create a notification
@@ -35,7 +35,7 @@ export function doNotify (titl, body, icon, url) {
     window.focus()
     window.open(url, '_self')
     n.close()
-    remove()
+    deleteThat()
   })
   setTimeout(n.close.bind(n), 10000) // close notification after 10 seconds
 }

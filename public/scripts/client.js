@@ -72,6 +72,7 @@ socket.on('issue_comment', (data) => {
   const img = alert.querySelector('.img')
   const del = alert.querySelector('.del')
   del.setAttribute('data-id', ids)
+  aTag.setAttribute('data-id', ids)
   img.setAttribute('src', data.sender.avatar_url)
   notis.textContent = counter
   if (data.action === 'deleted') {
@@ -112,18 +113,23 @@ socket.on('issue_comment', (data) => {
   if (document.hidden) {
     doNotify(heading.textContent, `${span.textContent}${ptag.textContent}${span2.textContent}`, data.sender.avatar_url, url)
   }
-  window.$(del).click(deleteThis)
-  window.$(aTag).click(deleteThis)
   notisBar.append(alert)
   allNotis.push(mess)
   allNotis = JSON.stringify(allNotis)
   window.sessionStorage.setItem(sessionStorageName, allNotis)
   window.sessionStorage.setItem(sessionStorageName2, ids)
+
+  window.$(del).click(deleteThis)
+  window.$(aTag).click(deleteThis)
 })
 
 socket.on('issues', function (data) {
   allNotis = window.sessionStorage.getItem(sessionStorageName)
-  allNotis = JSON.parse(allNotis)
+  if (allNotis) {
+    allNotis = JSON.parse(allNotis)
+  } else {
+    allNotis = []
+  }
   const mess = {}
   counter++
   ids++
@@ -148,6 +154,7 @@ socket.on('issues', function (data) {
   const ptag = document.createElement('label')
   span.className = 'font-weight-bold'
   const span2 = span.cloneNode(true)
+  aTag.setAttribute('data-id', ids)
   del.setAttribute('data-id', ids)
   img.setAttribute('src', data.sender.avatar_url)
   notis.textContent = counter
@@ -200,18 +207,25 @@ socket.on('issues', function (data) {
   allNotis.push(mess)
   allNotis = JSON.stringify(allNotis)
   window.sessionStorage.setItem(sessionStorageName, allNotis)
-  window.sessionStorage.setItem(sessionStorageName2, id)
+  window.sessionStorage.setItem(sessionStorageName2, ids)
 
   window.$(del).click(deleteThis)
   window.$(aTag).click(deleteThis)
   notisBar.append(alert)
   if (document.hidden) {
-    doNotify(heading.textContent, `${span.textContent}${ptag.textContent}${span2.textContent}`, data.sender.avatar_url, url, id)
+    doNotify(heading.textContent, `${span.textContent}${ptag.textContent}${span2.textContent}`, data.sender.avatar_url, url, ids)
   }
 })
 
 function deleteThis (e) {
-  let id = e.target.getAttribute('data-id')
+  let id = e.currentTarget.getAttribute('data-id')
+  const div = document.getElementById(id)
+  id = parseInt(id, 10)
+  remove(id)
+  div.remove()
+}
+
+export function deleteThat (id) {
   const div = document.getElementById(id)
   id = parseInt(id, 10)
   remove(id)
@@ -234,6 +248,7 @@ function displayNotis (arr) {
     const span2 = span.cloneNode(true)
     const aTag = alert.querySelector('a')
     aTag.setAttribute('href', element.url)
+    aTag.setAttribute('data-id', element.id)
     if (counter === 0) {
       notis.textContent = ''
     } else {
@@ -321,7 +336,7 @@ window.addEventListener('beforeunload', function (e) {
   socket.disconnect()
 })
 
-export function remove (id) {
+function remove (id) {
   allNotis = window.sessionStorage.getItem(sessionStorageName)
   allNotis = JSON.parse(allNotis)
   allNotis = allNotis.filter(e => e.id !== id)

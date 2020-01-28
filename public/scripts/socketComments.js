@@ -52,6 +52,7 @@ li.innerHTML = `
 `
 
 socket.on('issue_comment', function (data) {
+  console.log('i am here')
   if (data.token) {
     token = data.token
   }
