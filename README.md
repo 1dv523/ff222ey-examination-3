@@ -15,6 +15,10 @@ Using a module called Helmet js i was able to set a content security policy for 
 Instead of using normal HTTP i used https which creates a secure connection between the server and the client. Since HTTPS uses TLS it also provides message authentication and message verification so you can be certain that the sender or receiver is who he says is and that the message has not been tampered with while on transfer.
 ### Hooks
 Using a module called express-github-webhook i was able to verify that the hooks i receive actually come from github. I pass it a secret and it does a hash och the body and it makes sure that the hash matches the x-hub signature or it throws an error.
+## Terms explanations
+### Reverse Proxy
+A reverse proxy acts as a load balancer. It takes request from the internet and then forwards them to one of the web servers behind the proxy as can be seen in the picture below
+![Minion](https://octodex.github.com/images/minion.png)
 
 
 
