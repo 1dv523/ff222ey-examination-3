@@ -36,6 +36,37 @@ My extra modules are
 * csurf
 * dotenv
 * express-github-webhook
+* express-session
+* helmet
+* jquey
+* moment
+* passport
+* passport-github2
+* redis
+* socket.io
+* webpack
+
+### Body-parser
+It provides the ability to receive data from forms and such
+### Connect-redis
+I had a redis database which i used to save all the sessions. This is used to be able to connect to that database
+### Dot-env
+Specifies where my .env file is
+### Express-github-webhook
+Used for my webhook
+### Express-Session
+Integrated with passport to be able to create a session
+
+### Helmet
+Used for csp and to remove powered-by
+### Passport and Passport-github2
+Does the oath part of the authentication and creates a session for the authenticate user
+### Socket.io
+A lightweight version of websocket
+### WebPack
+For pages that have multiple client scripts I used webpack to bundle them into one file instead.
+
+
 
 
 
