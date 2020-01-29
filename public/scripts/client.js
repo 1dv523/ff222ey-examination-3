@@ -341,10 +341,9 @@ function remove (id) {
   allNotis = window.sessionStorage.getItem(sessionStorageName)
   allNotis = JSON.parse(allNotis)
   allNotis = allNotis.filter(e => e.id !== id)
-  const length = allNotis.length
   allNotis = JSON.stringify(allNotis)
   window.sessionStorage.setItem(sessionStorageName, allNotis)
-  window.sessionStorage.setItem(sessionStorageName2, length)
+  window.sessionStorage.setItem(sessionStorageName2, ids)
   counter-- // chekc
   if (counter === 0) {
     notis.textContent = ''
