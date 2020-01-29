@@ -18,7 +18,7 @@ Using a module called express-github-webhook i was able to verify that the hooks
 ## Terms explanations
 ### Reverse Proxy
 A reverse proxy acts as a load balancer. It takes request from the internet and then forwards them to one of the web servers behind the proxy as can be seen in the picture below
-![Minion](https://octodex.github.com/images/minion.png)
+![Minion](https://www.linuxbabe.com/wp-content/uploads/2016/01/reverse-proxy-1.png)
 
 
 
