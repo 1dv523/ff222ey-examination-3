@@ -30,12 +30,12 @@ An environment variable is a variable whose value is set outside of the program.
 
 ## Extra modules
 My extra modules are
-*body-parser
-*connect-redis
-*cookie
-*csurf
-*dotenv
-*express-github-webhook
+* body-parser
+* connect-redis
+* cookie
+* csurf
+* dotenv
+* express-github-webhook
 
 
 
