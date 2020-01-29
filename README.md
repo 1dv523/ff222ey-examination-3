@@ -66,6 +66,26 @@ A lightweight version of websocket
 ### WebPack
 For pages that have multiple client scripts I used webpack to bundle them into one file instead.
 
+## Differences in Production and Dev
+Express caches things in production
+
+## Extra features
+I have implemented lots of extra features
+* Got a certificate via lets encrypt instead of using a self signed one
+* Ability to close an issue
+* Ability to delete a comment
+* Ability to to create a comment
+* Ability to view and monitor comments as well
+* Created an oath App where a user can login and view all their resources
+* Ability to create a webhook through the api
+* Ability to delete a webhook through the api
+* Ability to listen to events on multiple repos at the same time
+* Implementented sessions using passport
+* Saved the Sessions in a redis database instead of using memory storage
+* Used Sessionstorage to save notifications on the client.
+* Used the notification api to push notifications when the users tab is not in focus
+
+
 
 
 
